@@ -1,6 +1,5 @@
 # Agenda Tech Brasil
 
-<!--![Agenda Tech Brasil](https://github.com/user-attachments/assets/f4dae2fe-b884-4a9f-8dfc-38ac38e57399) -->
 ![%Y-%m%d_](https://github.com/user-attachments/assets/57767b75-d582-4e3a-87f7-39471c27bb62)
 
 **Agenda Tech Brasil** é um projeto que lista eventos técnicos em várias áreas da tecnologia, como desenvolvimento, cloud computing, e mais! Este projeto utiliza [Next.js](https://nextjs.org) e dados dinâmicos carregados de um arquivo JSON.
