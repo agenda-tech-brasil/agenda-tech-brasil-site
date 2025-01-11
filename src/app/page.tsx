@@ -7,7 +7,7 @@ import { Evento, Evento2, Mese } from '@/@types/events'
 import { DrawerFilter } from '@/components/DrawerFilter'
 import { EventCard } from '@/components/EventCard'
 import LinksWithIcons from '@/components/iconsLink'
-// import ScreenSizeButton from '@/components/ScreenSizeButton'
+import ScreenSizeButton from '@/components/ScreenSizeButton'
 import { SparklesTextTitle } from '@/components/TitleSparklesText'
 
 import { fetchEvents } from '../utils/fetchEvents'
@@ -81,10 +81,13 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* <ScreenSizeButton /> */}
+         {process.env.NODE_ENV === 'development' && (
+        <ScreenSizeButton /> // ✅ Aparece apenas no ambiente de desenvolvimento
+      )}
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex flex-col items-center">
           <Image
-            src="/logo.png"
+            src="https://i.ibb.co/J3CxdLX/logo.png"
             alt="Logo Abacatinhos.dev"
             width={150}
             height={150}
