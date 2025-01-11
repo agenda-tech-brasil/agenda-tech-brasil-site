@@ -7,7 +7,7 @@ import { Evento, Evento2, Mese } from '@/@types/events'
 import { DrawerFilter } from '@/components/DrawerFilter'
 import { EventCard } from '@/components/EventCard'
 import LinksWithIcons from '@/components/iconsLink'
-import ScreenSizeButton from '@/components/ScreenSizeButton'
+// import ScreenSizeButton from '@/components/ScreenSizeButton'
 import { SparklesTextTitle } from '@/components/TitleSparklesText'
 
 import { fetchEvents } from '../utils/fetchEvents'
@@ -159,8 +159,7 @@ export default function Home() {
         ))}
       </div>
 
-
-      < footer className="bg-zinc-900 py-8 text-white" >
+      <footer className="bg-zinc-900 py-8 text-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col gap-8 text-center md:flex-row md:items-start md:text-left">
             <div className="flex flex-col items-center md:items-start">
@@ -204,8 +203,7 @@ export default function Home() {
             Feito com 💚 por Eventos Tech Brasil
           </div>
         </div>
-      </footer >
-
+      </footer>
     </div>
   )
 }
