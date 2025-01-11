@@ -81,17 +81,19 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* <ScreenSizeButton /> */}
-         {process.env.NODE_ENV === 'development' && (
+      {process.env.NODE_ENV === 'development' && (
         <ScreenSizeButton /> // ✅ Aparece apenas no ambiente de desenvolvimento
       )}
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex flex-col items-center">
+          {/*             // src="https://i.ibb.co/J3CxdLX/logo.png" */}
           <Image
-            src="https://i.ibb.co/J3CxdLX/logo.png"
+            src="/logo.png"
             alt="Logo Abacatinhos.dev"
             width={150}
             height={150}
             className="mb-4 rounded-full"
+            unoptimized
           />
           <SparklesTextTitle />
         </div>
