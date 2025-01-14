@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	basePath: '/agenda-tech-brasil-site',
+  // Set basePath only in production
+  basePath: process.env.NODE_ENV === 'development' ? '' : '/agenda-tech-brasil-site',
 };
 
 export default nextConfig;
