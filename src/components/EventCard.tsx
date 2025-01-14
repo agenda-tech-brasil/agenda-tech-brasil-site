@@ -1,54 +1,58 @@
-import { useState, useEffect } from 'react';
-import { CalendarIcon, ExternalLinkIcon, MapPinIcon } from 'lucide-react';
-import { CardContent, CardHeader } from '@/components/ui/card';
+import { CalendarIcon, ExternalLinkIcon, MapPinIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
+
+import { CardContent, CardHeader } from '@/components/ui/card'
 
 interface Event {
-  nome: string;
-  data: string[];
-  url: string;
-  cidade: string;
-  uf: string;
-  tipo: string;
+  nome: string
+  data: string[]
+  url: string
+  cidade: string
+  uf: string
+  tipo: string
 }
 
 const getBadgeColor = (tipo: string) => {
   switch (tipo) {
     case 'presencial':
-      return 'bg-sky-600/90';
+      return 'bg-sky-600/90'
     case 'híbrido':
-      return 'bg-purple-900/80';
+      return 'bg-purple-900/80'
     case 'online':
-      return 'bg-orange-600/90';
+      return 'bg-orange-600/90'
     default:
-      return 'bg-background/20';
+      return 'bg-background/20'
   }
-};
+}
 
 export function EventCard({ event, month }: { event: Event; month: string }) {
-  const [showPreview, setShowPreview] = useState(false);
-  const [iframeAllowed, setIframeAllowed] = useState(true);
+  const [showPreview, setShowPreview] = useState(false)
+  const [iframeAllowed, setIframeAllowed] = useState(true)
 
   const formattedDate =
     event.data.length > 1
       ? `${event.data[0]} - ${event.data[event.data.length - 1]}`
-      : event.data[0];
+      : event.data[0]
 
   const location =
     event.cidade && event.uf
       ? `${event.cidade}, ${event.uf}`
       : event.tipo === 'online'
-      ? ''
-      : 'Sem informação de local';
+        ? ''
+        : 'Sem informação de local'
 
-  const shortMonth = month.slice(0, 3).toUpperCase();
+  const shortMonth = month.slice(0, 3).toUpperCase()
 
   // Bloquear URLs de sites que não permitem iframe
   useEffect(() => {
-    const blockedDomains = ['https://www.meetup.com', 'https://www.sympla.com.br'];
+    const blockedDomains = [
+      'https://www.meetup.com',
+      'https://www.sympla.com.br',
+    ]
     if (blockedDomains.some((domain) => event.url.startsWith(domain))) {
-      setIframeAllowed(false);
+      setIframeAllowed(false)
     }
-  }, [event.url]);
+  }, [event.url])
 
   return (
     <div
@@ -71,7 +75,7 @@ export function EventCard({ event, month }: { event: Event; month: string }) {
               <div>
                 <span
                   className={`rounded-full px-2 py-0.5 text-xs text-zinc-50 md:text-sm ${getBadgeColor(
-                    event.tipo
+                    event.tipo,
                   )}`}
                 >
                   {event.tipo}
@@ -101,16 +105,16 @@ export function EventCard({ event, month }: { event: Event; month: string }) {
 
           {/* Prévia com IFRAME em forma de "nuvem" acima do card */}
           {showPreview && iframeAllowed && (
-            <div className="absolute top-[-260px] left-1/2 -translate-x-1/2 z-20 w-[400px] h-[250px] border rounded-lg shadow-xl bg-white">
+            <div className="absolute left-1/2 top-[-260px] z-20 h-[250px] w-[400px] -translate-x-1/2 rounded-lg border bg-white shadow-xl">
               <iframe
                 src={event.url}
                 title="Prévia do Evento"
-                className="w-full h-full rounded-lg"
+                className="h-full w-full rounded-lg"
                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
                 onError={() => setIframeAllowed(false)}
               />
               {/* Seta apontando para baixo */}
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-white"></div>
+              <div className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-white"></div>
             </div>
           )}
 
@@ -127,5 +131,5 @@ export function EventCard({ event, month }: { event: Event; month: string }) {
         </a>
       </div>
     </div>
-  );
+  )
 }
