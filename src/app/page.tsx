@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { Evento, Evento2, Mese } from '@/@types/events'
 import { DrawerFilter } from '@/components/DrawerFilter'
@@ -17,76 +17,110 @@ export default function Home() {
   const [filteredEvents, setFilteredEvents] = useState<Evento[]>([])
   const [selectedYear, setSelectedYear] = useState<string>('')
   const [anos, setAnos] = useState<string[]>([])
-  const [local, setLocal] = useState<string>('')
-  const [dataInicio, setDataInicio] = useState<string>('')
-  const [dataFim, setDataFim] = useState<string>('')
-  const [modo, setModo] = useState<string>('')
+  const [local, setLocal] = useState<string>('') // Filtro pela cidade
+  const [startDate, setStartDate] = useState<string>('') // Data inicial (YYYY-MM-DD)
+  const [endDate, setEndDate] = useState<string>('') // Data final (YYYY-MM-DD)
+  const [tipo, setTipo] = useState<string>('') // Filtro por tipo: presencial, híbrido ou online
 
-  const mesRefs = useRef<{ [chave: string]: HTMLDivElement | null }>({})
+  // Mapeamento dos nomes dos meses para índices (0 = janeiro ... 11 = dezembro)
+  const monthMapping: { [key: string]: number } = {
+    janeiro: 0,
+    fevereiro: 1,
+    março: 2,
+    abril: 3,
+    maio: 4,
+    junho: 5,
+    julho: 6,
+    agosto: 7,
+    setembro: 8,
+    outubro: 9,
+    novembro: 10,
+    dezembro: 11,
+  }
 
-  // ✅ Corrigido: Declaração de filterEvents antes de ser usado
+  /**
+   * Função de filtragem que percorre os eventos agrupados por ano e mês
+   * aplicando os filtros de ano, cidade, data e tipo.
+   */
   const filterEvents = useCallback(
     (eventsData: Evento[], anoSelecionado: string) => {
-      const filtrado = eventsData.filter((evento) => {
-        if (anoSelecionado && evento.ano.toString() !== anoSelecionado)
-          return false
+      // Filtra os dados pelo ano selecionado (caso informado)
+      const eventsFilteredByYear = eventsData.filter((yearData) =>
+        anoSelecionado ? yearData.ano.toString() === anoSelecionado : true,
+      )
 
-        if (
-          local &&
-          !evento.localidade?.toLowerCase().includes(local.toLowerCase())
-        )
-          return false
-
-        const dataInicioEvento = new Date(evento.dataInicio)
-        const dataFimEvento = new Date(evento.dataFim)
-        if (dataInicio && dataInicioEvento < new Date(dataInicio)) return false
-        if (dataFim && dataFimEvento > new Date(dataFim)) return false
-
-        // ✅ Verificação segura para evitar erro de undefined
-        if (modo && evento.modelo?.toLowerCase() !== modo.toLowerCase())
-          return false
-
-        return true
-      })
+      // Para cada ano, percorre os meses e filtra os eventos de acordo com os parâmetros
+      const filtrado = eventsFilteredByYear
+        .map((yearData) => {
+          const mesesFiltrados = yearData.meses
+            .map((mesData) => {
+              const eventosFiltrados = mesData.eventos.filter((evento) => {
+                // Filtro por cidade (campo "cidade")
+                if (
+                  local &&
+                  !evento.cidade?.toLowerCase().includes(local.toLowerCase())
+                ) {
+                  return false
+                }
+                // Filtro por tipo (presencial, híbrido ou online)
+                if (tipo && evento.tipo?.toLowerCase() !== tipo.toLowerCase()) {
+                  return false
+                }
+                // Filtro por data: usamos o primeiro dia do array "data" para montar a data do evento
+                if (startDate || endDate) {
+                  const day = Number(evento.data[0])
+                  const monthNumber =
+                    monthMapping[mesData.mes.toLowerCase()] ?? 0
+                  const eventDate = new Date(yearData.ano, monthNumber, day)
+                  if (startDate && eventDate < new Date(startDate)) {
+                    return false
+                  }
+                  if (endDate && eventDate > new Date(endDate)) {
+                    return false
+                  }
+                }
+                return true
+              })
+              return { ...mesData, eventos: eventosFiltrados }
+            })
+            // Remove os meses que não possuem eventos após a filtragem
+            .filter((mesData) => mesData.eventos.length > 0)
+          return { ...yearData, meses: mesesFiltrados }
+        })
+        // Remove os anos que não possuem meses com eventos
+        .filter((yearData) => yearData.meses.length > 0)
 
       setFilteredEvents(filtrado)
     },
-    [local, dataInicio, dataFim, modo],
+    [local, startDate, endDate, tipo],
   )
 
-  // ✅ Corrigido: filterEvents incluído nas dependências
+  // Carrega os eventos e define os anos disponíveis
   useEffect(() => {
     const carregarEventos = async () => {
       const eventsData = await fetchEvents()
       setEventos(eventsData)
-
       const anoAtual = new Date().getFullYear().toString()
       const anosDisponiveis = [
         ...new Set(eventsData.map((e) => e.ano.toString())),
       ]
-
       setAnos(anosDisponiveis)
       setSelectedYear(anoAtual)
-
       filterEvents(eventsData, anoAtual)
     }
-
     carregarEventos()
-  }, [filterEvents]) // ✅ filterEvents incluído nas dependências
+  }, [filterEvents])
 
+  // Reaplica os filtros sempre que algum dos parâmetros mudar
   useEffect(() => {
     filterEvents(eventos, selectedYear)
-  }, [eventos, selectedYear, local, dataInicio, dataFim, modo, filterEvents]) // ✅ filterEvents incluído
+  }, [eventos, selectedYear, local, startDate, endDate, tipo, filterEvents])
 
   return (
     <div className="min-h-screen bg-background">
-      {/* <ScreenSizeButton /> */}
-      {process.env.NODE_ENV === 'development' && (
-        <ScreenSizeButton /> // ✅ Aparece apenas no ambiente de desenvolvimento
-      )}
+      {process.env.NODE_ENV === 'development' && <ScreenSizeButton />}
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex flex-col items-center">
-          {/*             // src="https://i.ibb.co/J3CxdLX/logo.png" */}
           <Image
             src="/logo.png"
             alt="Logo Abacatinhos.dev"
@@ -98,26 +132,29 @@ export default function Home() {
           <SparklesTextTitle />
         </div>
 
+        {/* Componente de filtro */}
         <DrawerFilter
           years={anos}
           selectedYear={selectedYear}
           onYearChange={setSelectedYear}
           location={local}
           setLocation={setLocal}
-          startDate={dataInicio}
-          setStartDate={setDataInicio}
-          endDate={dataFim}
-          setEndDate={setDataFim}
-          mode={modo}
-          setMode={setModo}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          // O parâmetro "mode" aqui representa o tipo de evento (presencial, híbrido ou online)
+          mode={tipo}
+          setMode={setTipo}
         />
 
+        {/* Exibe os eventos filtrados */}
         {filteredEvents.map((yearData: Evento) => (
           <div key={yearData.ano} className="mb-8">
             <h2 className="mb-4 text-3xl font-semibold text-primary">
               {yearData.ano}
             </h2>
-            {yearData.meses.map((mesData: Mese, mesIndex: number) => {
+            {yearData.meses.map((mesData: Mese) => {
               const mesColors = [
                 '#f43f5e',
                 '#10b981',
@@ -132,16 +169,12 @@ export default function Home() {
                 '#2563eb',
                 '#eab308',
               ]
-              const mesColor = mesColors[mesIndex % mesColors.length]
+              // Calcula o índice do mês para selecionar uma cor
+              const monthIndex = new Date(`${mesData.mes} 1, 2000`).getMonth()
+              const mesColor = mesColors[monthIndex % mesColors.length]
 
               return (
-                <div
-                  key={mesData.mes}
-                  className="mb-8"
-                  ref={(el) => {
-                    mesRefs.current[mesData.mes.toLowerCase()] = el
-                  }}
-                >
+                <div key={mesData.mes} className="mb-8">
                   <h3
                     className="mb-8 text-2xl font-semibold capitalize"
                     style={{ color: mesColor }}

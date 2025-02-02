@@ -1,6 +1,9 @@
-import * as React from 'react'
-import { useCallback, useEffect, useState } from 'react'
+'use client'
 
+import * as React from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+
+import { Evento } from '@/@types/events'
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
@@ -12,12 +15,19 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 import { EventFilters } from './EventFilters'
 import { RainbowButtonFilter } from './RaibowButtonFilter'
 import { Input } from './ui/input'
 
-interface EventFiltersProps {
+interface DrawerFilterProps {
   years: string[]
   selectedYear: string
   onYearChange: (year: string) => void
@@ -29,6 +39,11 @@ interface EventFiltersProps {
   setEndDate: (date: string) => void
   mode: string
   setMode: (mode: string) => void
+  /**
+   * Dados dos eventos (array de objetos agrupados por ano e mês)
+   * para extrair dinamicamente os tipos disponíveis.
+   */
+  eventsData?: Evento[]
 }
 
 export function DrawerFilter({
@@ -43,8 +58,27 @@ export function DrawerFilter({
   setEndDate,
   mode,
   setMode,
-}: EventFiltersProps) {
-  const eventModes = ['Online', 'Híbrido', 'Presencial']
+  eventsData,
+}: DrawerFilterProps) {
+  // Se os dados dos eventos foram passados, extrai os tipos únicos;
+  // caso contrário, usa um array padrão.
+  const uniqueEventTypes = useMemo(() => {
+    if (!eventsData) {
+      return ['online', 'híbrido', 'presencial']
+    }
+    const types = new Set<string>()
+    eventsData.forEach((yearData) => {
+      yearData.meses.forEach((mes) => {
+        mes.eventos.forEach((evento) => {
+          if (evento.tipo) {
+            types.add(evento.tipo.toLowerCase())
+          }
+        })
+      })
+    })
+    return Array.from(types)
+  }, [eventsData])
+
   const [showButton, setShowButton] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
 
@@ -135,21 +169,25 @@ export function DrawerFilter({
               />
             </div>
 
-            {/* Filtro de Modelo */}
+            {/* Filtro de Tipo (dropdown gerado dinamicamente com base no JSON) */}
             <div>
-              <label className="block text-sm font-medium">Modelo</label>
-              <select
-                value={mode}
-                onChange={(e) => setMode(e.target.value)}
-                className="w-full rounded-md border p-1 text-sm"
+              <label className="block text-sm font-medium">Tipo</label>
+              <Select
+                value={mode === '' ? 'all' : mode}
+                onValueChange={(val) => setMode(val === 'all' ? '' : val)}
               >
-                <option value="">Todos</option>
-                {eventModes.map((modeOption) => (
-                  <option key={modeOption} value={modeOption.toLowerCase()}>
-                    {modeOption}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  {uniqueEventTypes.map((typeOption) => (
+                    <SelectItem key={typeOption} value={typeOption}>
+                      {typeOption.charAt(0).toUpperCase() + typeOption.slice(1)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
