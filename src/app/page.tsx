@@ -7,6 +7,7 @@ import { Evento, Evento2, Mese } from '@/@types/events'
 import { DrawerFilter } from '@/components/DrawerFilter'
 import { EventCard } from '@/components/EventCard'
 import LinksWithIcons from '@/components/iconsLink'
+import NoEvents from '@/components/NoEvents'
 import { RowFilter } from '@/components/RowFilter'
 import ScreenSizeButton from '@/components/ScreenSizeButton'
 import { SparklesTextTitle } from '@/components/TitleSparklesText'
@@ -173,7 +174,7 @@ export default function Home() {
               </div> */}
             {/* </div> */}
           </div>
-        ) : filteredEvents.length > 0 ? (
+        ) : filteredEvents.length >= 0 ? (
           <RowFilter
             years={anos}
             selectedYear={selectedYear}
@@ -262,9 +263,8 @@ export default function Home() {
           ))
         ) : (
           // Caso não haja eventos após a filtragem
-          <div className="text-center text-lg text-gray-600">
-            Nenhum evento encontrado.
-          </div>
+          <NoEvents />
+          // <>oi</>
         )}
       </div>
 
