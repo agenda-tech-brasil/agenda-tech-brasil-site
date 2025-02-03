@@ -103,7 +103,7 @@ export function DrawerFilter({
   }, [handleScroll])
 
   return (
-    <div className='block lg:hidden'>
+    <div className="block lg:hidden">
       <Drawer>
         <DrawerTrigger asChild>
           <div
@@ -184,7 +184,8 @@ export function DrawerFilter({
                     <SelectItem value="all">Todos</SelectItem>
                     {uniqueEventTypes.map((typeOption) => (
                       <SelectItem key={typeOption} value={typeOption}>
-                        {typeOption.charAt(0).toUpperCase() + typeOption.slice(1)}
+                        {typeOption.charAt(0).toUpperCase() +
+                          typeOption.slice(1)}
                       </SelectItem>
                     ))}
                   </SelectContent>

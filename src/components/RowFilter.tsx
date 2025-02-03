@@ -3,10 +3,17 @@
 import * as React from 'react'
 import { useMemo } from 'react'
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Evento } from '@/@types/events'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
 import { EventFilters } from './EventFilters'
 import { Input } from './ui/input'
-import { Evento } from '@/@types/events'
 
 interface RowFilterProps {
   years: string[]
@@ -62,7 +69,7 @@ export function RowFilter({
 
   return (
     // Este container é exibido apenas em telas menores que md (hidden em md e acima)
-    <div className="flex flex-row justify-center items-center gap-4 p-2 max-lg:hidden">
+    <div className="flex flex-row items-center justify-center gap-4 p-2 max-lg:hidden">
       {/* Filtro de Ano */}
       <div className="flex flex-col">
         <label className="block text-sm font-medium">Ano</label>
@@ -75,7 +82,10 @@ export function RowFilter({
       {/* Filtro de Tipo */}
       <div className="flex flex-col">
         <label className="block text-sm font-medium">Tipo</label>
-        <Select value={mode === "" ? "all" : mode} onValueChange={(val) => setMode(val === "all" ? "" : val)}>
+        <Select
+          value={mode === '' ? 'all' : mode}
+          onValueChange={(val) => setMode(val === 'all' ? '' : val)}
+        >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Todos" />
           </SelectTrigger>
@@ -124,7 +134,6 @@ export function RowFilter({
           className="w-full rounded-md border p-1 text-sm"
         />
       </div>
-
     </div>
   )
 }

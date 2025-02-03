@@ -7,11 +7,11 @@ import { Evento, Evento2, Mese } from '@/@types/events'
 import { DrawerFilter } from '@/components/DrawerFilter'
 import { EventCard } from '@/components/EventCard'
 import LinksWithIcons from '@/components/iconsLink'
+import { RowFilter } from '@/components/RowFilter'
 import ScreenSizeButton from '@/components/ScreenSizeButton'
 import { SparklesTextTitle } from '@/components/TitleSparklesText'
 
 import { fetchEvents } from '../utils/fetchEvents'
-import { RowFilter } from '@/components/RowFilter'
 
 export default function Home() {
   const [eventos, setEventos] = useState<Evento[]>([])
@@ -152,17 +152,17 @@ export default function Home() {
           mode={tipo}
           setMode={setTipo}
         />
-             {loading ? (
+        {loading ? (
           // Exibe um skeleton simples enquanto os eventos não são carregados
-          <div className="flex justify-center mt-16 gap-8">
+          <div className="mt-16 flex justify-center gap-8">
             {/* <div className="mb-8"> */}
-              {/* Skeleton para o título do ano */}
-              <div className="mx-auto mb-4 h-8 w-[40rem] bg-slate-800 animate-pulse rounded"></div>
-              {/* <div className="mb-8">
+            {/* Skeleton para o título do ano */}
+            <div className="mx-auto mb-4 h-8 w-[40rem] animate-pulse rounded bg-slate-800"></div>
+            {/* <div className="mb-8">
                 {/* Skeleton para o título do mês */}
-                {/* <div className="mb-4 h-6 w-24 bg-slate-800 animate-pulse rounded"></div> */}
-                {/* Skeleton para os cards */}
-                {/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {/* <div className="mb-4 h-6 w-24 bg-slate-800 animate-pulse rounded"></div> */}
+            {/* Skeleton para os cards */}
+            {/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {Array.from({ length: 6 }).map((_, index) => (
                     <div
                       key={index}
@@ -174,21 +174,22 @@ export default function Home() {
             {/* </div> */}
           </div>
         ) : filteredEvents.length > 0 ? (
-        <RowFilter
-          years={anos}
-          selectedYear={selectedYear}
-          onYearChange={setSelectedYear}
-          location={local}
-          setLocation={setLocal}
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-          mode={tipo}
-          setMode={setTipo}
-        />
-        ): (<></>)
-      }
+          <RowFilter
+            years={anos}
+            selectedYear={selectedYear}
+            onYearChange={setSelectedYear}
+            location={local}
+            setLocation={setLocal}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            mode={tipo}
+            setMode={setTipo}
+          />
+        ) : (
+          <></>
+        )}
 
         {/* Exibe os eventos filtrados ou um skeleton enquanto os dados não chegam */}
         {loading ? (
@@ -196,16 +197,16 @@ export default function Home() {
           <div className="flex flex-col gap-8">
             <div className="mb-8">
               {/* Skeleton para o título do ano */}
-              <div className="mb-4 h-8 w-32 bg-slate-800 animate-pulse rounded"></div>
+              <div className="mb-4 h-8 w-32 animate-pulse rounded bg-slate-800"></div>
               <div className="mb-8">
                 {/* Skeleton para o título do mês */}
-                <div className="mb-4 h-6 w-24 bg-slate-800 animate-pulse rounded"></div>
+                <div className="mb-4 h-6 w-24 animate-pulse rounded bg-slate-800"></div>
                 {/* Skeleton para os cards */}
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {Array.from({ length: 6 }).map((_, index) => (
                     <div
                       key={index}
-                      className="h-48 bg-slate-800 animate-pulse rounded"
+                      className="h-48 animate-pulse rounded bg-slate-800"
                     ></div>
                   ))}
                 </div>
@@ -246,15 +247,13 @@ export default function Home() {
                       {mesData.mes}
                     </h3>
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                      {mesData.eventos.map(
-                        (evento: Evento2, index: number) => (
-                          <EventCard
-                            key={`${evento.nome}-${index}`}
-                            event={evento}
-                            month={mesData.mes}
-                          />
-                        ),
-                      )}
+                      {mesData.eventos.map((evento: Evento2, index: number) => (
+                        <EventCard
+                          key={`${evento.nome}-${index}`}
+                          event={evento}
+                          month={mesData.mes}
+                        />
+                      ))}
                     </div>
                   </div>
                 )
