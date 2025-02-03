@@ -103,103 +103,105 @@ export function DrawerFilter({
   }, [handleScroll])
 
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <div
-          className={`
-            fixed bottom-4 right-4 z-10 
-            transition-all duration-500 ease-in-out
-            ${showButton ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}
-          `}
-        >
-          <RainbowButtonFilter />
-        </div>
-      </DrawerTrigger>
-      <DrawerContent className="max-w-xs">
-        <div className="mx-auto w-full">
-          <DrawerHeader>
-            <DrawerTitle className="text-lg">Filtrar</DrawerTitle>
-            <DrawerDescription className="text-sm text-gray-500">
-              Ajuste os filtros conforme necessário.
-            </DrawerDescription>
-          </DrawerHeader>
-
-          <div className="space-y-2 p-2">
-            {/* Filtro de Ano */}
-            <label className="block text-sm font-medium">Ano</label>
-            <EventFilters
-              onYearChange={onYearChange}
-              selectedYear={selectedYear}
-              years={years}
-            />
-
-            {/* Filtro de Localidade */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium">Localidade</label>
-              <Input
-                type="text"
-                placeholder="Digite o local"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full rounded-md border p-1 text-sm"
-              />
-            </div>
-
-            {/* Filtro de Data de Início */}
-            <div>
-              <label className="block text-sm font-medium">
-                Data de Início
-              </label>
-              <Input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full rounded-md border p-1 text-sm"
-              />
-            </div>
-
-            {/* Filtro de Data de Fim */}
-            <div>
-              <label className="block text-sm font-medium">Data de Fim</label>
-              <Input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full rounded-md border p-1 text-sm"
-              />
-            </div>
-
-            {/* Filtro de Tipo (dropdown gerado dinamicamente com base no JSON) */}
-            <div>
-              <label className="block text-sm font-medium">Tipo</label>
-              <Select
-                value={mode === '' ? 'all' : mode}
-                onValueChange={(val) => setMode(val === 'all' ? '' : val)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Todos" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  {uniqueEventTypes.map((typeOption) => (
-                    <SelectItem key={typeOption} value={typeOption}>
-                      {typeOption.charAt(0).toUpperCase() + typeOption.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+    <div className='block lg:hidden'>
+      <Drawer>
+        <DrawerTrigger asChild>
+          <div
+            className={`
+              fixed bottom-4 right-4 z-10
+              transition-all duration-500 ease-in-out
+              ${showButton ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}
+            `}
+          >
+            <RainbowButtonFilter />
           </div>
+        </DrawerTrigger>
+        <DrawerContent className="max-w-xs">
+          <div className="mx-auto w-full">
+            <DrawerHeader>
+              <DrawerTitle className="text-lg">Filtrar</DrawerTitle>
+              <DrawerDescription className="text-sm text-gray-500">
+                Ajuste os filtros conforme necessário.
+              </DrawerDescription>
+            </DrawerHeader>
 
-          <DrawerFooter className="space-x-2">
-            <DrawerClose asChild>
-              <Button variant="outline" className="w-full text-sm">
-                Cancelar
-              </Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </div>
-      </DrawerContent>
-    </Drawer>
+            <div className="space-y-2 p-2">
+              {/* Filtro de Ano */}
+              <label className="block text-sm font-medium">Ano</label>
+              <EventFilters
+                onYearChange={onYearChange}
+                selectedYear={selectedYear}
+                years={years}
+              />
+
+              {/* Filtro de Localidade */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium">Localidade</label>
+                <Input
+                  type="text"
+                  placeholder="Digite o local"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full rounded-md border p-1 text-sm"
+                />
+              </div>
+
+              {/* Filtro de Data de Início */}
+              <div>
+                <label className="block text-sm font-medium">
+                  Data de Início
+                </label>
+                <Input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full rounded-md border p-1 text-sm"
+                />
+              </div>
+
+              {/* Filtro de Data de Fim */}
+              <div>
+                <label className="block text-sm font-medium">Data de Fim</label>
+                <Input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-full rounded-md border p-1 text-sm"
+                />
+              </div>
+
+              {/* Filtro de Tipo (dropdown gerado dinamicamente com base no JSON) */}
+              <div>
+                <label className="block text-sm font-medium">Tipo</label>
+                <Select
+                  value={mode === '' ? 'all' : mode}
+                  onValueChange={(val) => setMode(val === 'all' ? '' : val)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Todos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    {uniqueEventTypes.map((typeOption) => (
+                      <SelectItem key={typeOption} value={typeOption}>
+                        {typeOption.charAt(0).toUpperCase() + typeOption.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <DrawerFooter className="space-x-2">
+              <DrawerClose asChild>
+                <Button variant="outline" className="w-full text-sm">
+                  Cancelar
+                </Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </div>
   )
 }
