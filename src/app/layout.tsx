@@ -1,4 +1,5 @@
 import './globals.css'
+
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Head from 'next/head'
@@ -8,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: {
     default: 'Agenda Tech Brasil',
-    template: '%s | Agenda Tech Brasil'
+    template: '%s | Agenda Tech Brasil',
   },
   description: 'Eventos de tecnologia no Brasil',
   metadataBase: new URL('https://agenda-tech-brasil-site.js.org/'),
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     'conferências Brasil',
     'meetups desenvolvimento',
     'hackathons',
-    'workshops programação'
+    'workshops programação',
   ],
   authors: [
     {
