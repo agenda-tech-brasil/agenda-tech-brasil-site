@@ -128,7 +128,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex flex-col items-center">
           <Image
-            src="/logo.png"
+            src="/agenda-tech.png"
             alt="Logo Abacatinhos.dev"
             width={150}
             height={150}

@@ -5,10 +5,22 @@ import { Inter } from 'next/font/google'
 import Head from 'next/head'
 
 const inter = Inter({ subsets: ['latin'] })
+
 export const metadata: Metadata = {
   title: 'Agenda Tech Brasil',
   description: 'Eventos de tecnologia no Brasil',
-  icons: '/favicon.ico',
+  metadataBase: new URL('https://agenda-tech-brasil-site.js.org/'),
+  icons: {
+    icon: '/favicon.ico',
+  },
+  openGraph: {
+    images: [
+      {
+        url: '/bg-preview',
+        alt: 'Background Preview',
+      },
+    ],
+  },
 }
 
 export default function RootLayout({
@@ -26,8 +38,7 @@ export default function RootLayout({
         {/* <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" /> */}
         {/* <link rel="manifest" href="/site.webmanifest" /> */}
       </Head>
-      {/* ${geistSans.variable} ${geistMono.variable} */}
-      <body className={`${inter} dark antialiased`}>{children}</body>
+      <body className={`${inter.className} dark antialiased`}>{children}</body>
     </html>
   )
 }
