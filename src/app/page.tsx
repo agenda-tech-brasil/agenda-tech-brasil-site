@@ -156,38 +156,26 @@ export default function Home() {
         {loading ? (
           // Exibe um skeleton simples enquanto os eventos não são carregados
           <div className="mt-16 flex justify-center gap-8">
-            {/* <div className="mb-8"> */}
             {/* Skeleton para o título do ano */}
-            <div className="mx-auto mb-4 h-8 w-[40rem] animate-pulse rounded bg-slate-800"></div>
-            {/* <div className="mb-8">
-                {/* Skeleton para o título do mês */}
-            {/* <div className="mb-4 h-6 w-24 bg-slate-800 animate-pulse rounded"></div> */}
-            {/* Skeleton para os cards */}
-            {/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {Array.from({ length: 6 }).map((_, index) => (
-                    <div
-                      key={index}
-                      className="h-48 bg-slate-800 animate-pulse rounded"
-                    ></div>
-                  ))}
-                </div> /}
-              </div> */}
-            {/* </div> */}
+            <div className="mx-auto mb-4 h-8 w-[40rem] animate-pulse cursor-wait rounded bg-slate-800"></div>
           </div>
         ) : filteredEvents.length >= 0 ? (
-          <RowFilter
-            years={anos}
-            selectedYear={selectedYear}
-            onYearChange={setSelectedYear}
-            location={local}
-            setLocation={setLocal}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            mode={tipo}
-            setMode={setTipo}
-          />
+          <div className="sticky top-0 z-50 bg-background pb-4 pt-2">
+            <RowFilter
+              years={anos}
+              selectedYear={selectedYear}
+              onYearChange={setSelectedYear}
+              location={local}
+              setLocation={setLocal}
+              startDate={startDate}
+              setStartDate={setStartDate}
+              endDate={endDate}
+              setEndDate={setEndDate}
+              mode={tipo}
+              setMode={setTipo}
+              eventsData={eventos}
+            />
+          </div>
         ) : (
           <></>
         )}
@@ -198,16 +186,16 @@ export default function Home() {
           <div className="flex flex-col gap-8">
             <div className="mb-8">
               {/* Skeleton para o título do ano */}
-              <div className="mb-4 h-8 w-32 animate-pulse rounded bg-slate-800"></div>
+              <div className="mb-4 h-8 w-32 animate-pulse cursor-wait rounded bg-slate-800"></div>
               <div className="mb-8">
                 {/* Skeleton para o título do mês */}
-                <div className="mb-4 h-6 w-24 animate-pulse rounded bg-slate-800"></div>
+                <div className="mb-4 h-6 w-24 animate-pulse cursor-wait rounded bg-slate-800"></div>
                 {/* Skeleton para os cards */}
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {Array.from({ length: 6 }).map((_, index) => (
                     <div
                       key={index}
-                      className="h-48 animate-pulse rounded bg-slate-800"
+                      className="h-48 animate-pulse cursor-wait rounded bg-slate-800"
                     ></div>
                   ))}
                 </div>
@@ -264,7 +252,6 @@ export default function Home() {
         ) : (
           // Caso não haja eventos após a filtragem
           <NoEvents />
-          // <>oi</>
         )}
       </div>
 

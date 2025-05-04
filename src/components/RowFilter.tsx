@@ -1,5 +1,6 @@
 'use client'
 
+import { CalendarIcon } from 'lucide-react'
 import * as React from 'react'
 import { useMemo } from 'react'
 
@@ -13,9 +14,8 @@ import {
 } from '@/components/ui/select'
 
 import { EventFilters } from './EventFilters'
-import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { CalendarIcon } from 'lucide-react'
+import { Input } from './ui/input'
 
 interface RowFilterProps {
   years: string[]
@@ -69,11 +69,14 @@ export function RowFilter({
     return Array.from(types)
   }, [eventsData])
 
-  const todayDate = (() => {
-    const todayBrFormat = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }).split(",")[0].replaceAll("/", "-")
-    const todayUSFormat = `${todayBrFormat.split("-")[2]}-${todayBrFormat.split("-")[1]}-${todayBrFormat.split("-")[0]}`
+  const todayDate = () => {
+    const todayBrFormat = new Date()
+      .toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+      .split(',')[0]
+      .replaceAll('/', '-')
+    const todayUSFormat = `${todayBrFormat.split('-')[2]}-${todayBrFormat.split('-')[1]}-${todayBrFormat.split('-')[0]}`
     setStartDate(todayUSFormat)
-  })
+  }
 
   return (
     // Este container é exibido apenas em telas menores que md (hidden em md e acima)
@@ -135,13 +138,12 @@ export function RowFilter({
           <Button
             type="button"
             onClick={todayDate} // função que você definir
-            className="absolute bg-black right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0 hover:bg-black"
+            className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 bg-black p-0 hover:bg-black"
           >
-            <CalendarIcon className="text-white h-4 w-4 opacity-50" />
+            <CalendarIcon className="h-4 w-4 text-white opacity-50" />
           </Button>
         </div>
       </div>
-
 
       {/* Filtro de Data de Fim */}
       <div className="flex flex-col">
