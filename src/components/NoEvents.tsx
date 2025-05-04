@@ -1,8 +1,6 @@
 'use client'
 import Image from 'next/image'
 
-// Se estiver usando Next.js
-
 const NoEvents: React.FC = () => {
   return (
     <div className="flex h-[400px] flex-col items-center justify-center text-center text-xl text-slate-100">

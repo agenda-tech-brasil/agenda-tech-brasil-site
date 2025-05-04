@@ -1,6 +1,6 @@
 'use client'
 
-import { CalendarIcon } from 'lucide-react'
+import { FilterIcon, XCircleIcon } from 'lucide-react'
 import * as React from 'react'
 import { useMemo } from 'react'
 
@@ -29,10 +29,6 @@ interface RowFilterProps {
   setEndDate: (date: string) => void
   mode: string
   setMode: (mode: string) => void
-  /**
-   * Dados dos eventos (array de objetos agrupados por ano e mês)
-   * para extrair dinamicamente os tipos disponíveis.
-   */
   eventsData?: Evento[]
 }
 
@@ -50,12 +46,8 @@ export function RowFilter({
   setMode,
   eventsData,
 }: RowFilterProps) {
-  // Se os dados dos eventos foram passados, extrai os tipos únicos;
-  // caso contrário, usa um array padrão.
   const uniqueEventTypes = useMemo(() => {
-    if (!eventsData) {
-      return ['online', 'híbrido', 'presencial']
-    }
+    if (!eventsData) return ['online', 'híbrido', 'presencial']
     const types = new Set<string>()
     eventsData.forEach((yearData) => {
       yearData.meses.forEach((mes) => {
@@ -69,35 +61,43 @@ export function RowFilter({
     return Array.from(types)
   }, [eventsData])
 
-  const todayDate = () => {
-    const todayBrFormat = new Date()
-      .toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
-      .split(',')[0]
-      .replaceAll('/', '-')
-    const todayUSFormat = `${todayBrFormat.split('-')[2]}-${todayBrFormat.split('-')[1]}-${todayBrFormat.split('-')[0]}`
-    setStartDate(todayUSFormat)
+  const clearPastEvents = () => {
+    const today = new Date().toISOString().split('T')[0]
+    setStartDate(today)
+    setEndDate('')
+  }
+
+  const clearFilters = () => {
+    setMode('')
+    setLocation('')
+    setStartDate('')
+    setEndDate('')
   }
 
   return (
-    // Este container é exibido apenas em telas menores que md (hidden em md e acima)
-    <div className="flex flex-row items-center justify-center gap-4 p-2 max-lg:hidden">
-      {/* Filtro de Ano */}
+    <div className="flex flex-wrap items-end justify-center gap-4 bg-background p-4 max-lg:hidden">
+      {/* Ano */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium">Ano</label>
+        <label className="mb-1 text-sm font-medium text-muted-foreground">
+          Ano
+        </label>
         <EventFilters
           onYearChange={onYearChange}
           selectedYear={selectedYear}
           years={years}
         />
       </div>
-      {/* Filtro de Tipo */}
+
+      {/* Tipo */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium">Tipo</label>
+        <label className="mb-1 text-sm font-medium text-muted-foreground">
+          Tipo
+        </label>
         <Select
-          value={mode === '' ? 'all' : mode}
+          value={mode || 'all'}
           onValueChange={(val) => setMode(val === 'all' ? '' : val)}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-36">
             <SelectValue placeholder="Todos" />
           </SelectTrigger>
           <SelectContent>
@@ -111,49 +111,66 @@ export function RowFilter({
         </Select>
       </div>
 
-      {/* Filtro de Localidade */}
+      {/* Localidade */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium">Localidade</label>
+        <label className="mb-1 text-sm font-medium text-muted-foreground">
+          Localidade
+        </label>
         <Input
           type="text"
           placeholder="Digite o local"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="w-full rounded-md border p-1 text-sm"
+          className="w-36"
         />
       </div>
 
-      {/* Filtro de Data de Início */}
+      {/* Data Início */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium">Data de Início</label>
-
+        <label className="mb-1 text-sm font-medium text-muted-foreground">
+          Início
+        </label>
         <div className="relative">
           <Input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="w-full rounded-md border p-1 pr-10 text-sm text-white 
-                 placeholder-white focus:ring-white"
+            className="w-36 text-sm"
           />
-          <Button
-            type="button"
-            onClick={todayDate} // função que você definir
-            className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 bg-black p-0 hover:bg-black"
-          >
-            <CalendarIcon className="h-4 w-4 text-white opacity-50" />
-          </Button>
         </div>
       </div>
 
-      {/* Filtro de Data de Fim */}
+      {/* Data Fim */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium">Data de Fim</label>
+        <label className="mb-1 text-sm font-medium text-muted-foreground">
+          Fim
+        </label>
         <Input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="w-full rounded-md border p-1 text-sm"
+          className="w-36 text-sm"
         />
+      </div>
+
+      {/* Ações */}
+      <div className="flex flex-col gap-2 xl:flex-row">
+        <Button
+          onClick={clearPastEvents}
+          variant="outline"
+          className="flex items-center gap-2 bg-transparent text-xs"
+        >
+          <FilterIcon className="h-4 w-4" />
+          Ocultar passados
+        </Button>
+        <Button
+          onClick={clearFilters}
+          variant="ghost"
+          className="flex items-center gap-2 text-xs text-red-500"
+        >
+          <XCircleIcon className="h-4 w-4" />
+          Limpar filtros
+        </Button>
       </div>
     </div>
   )

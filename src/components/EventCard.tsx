@@ -48,6 +48,7 @@ export function EventCard({ event, month }: { event: Event; month: string }) {
     const blockedDomains = [
       'https://www.meetup.com',
       'https://www.sympla.com.br',
+      'https://www.instagram.com',
     ]
     if (blockedDomains.some((domain) => event.url.startsWith(domain))) {
       setIframeAllowed(false)

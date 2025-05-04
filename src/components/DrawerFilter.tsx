@@ -1,6 +1,6 @@
 'use client'
 
-import { CalendarIcon } from 'lucide-react'
+import { CalendarIcon, XCircleIcon } from 'lucide-react'
 import * as React from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -103,15 +103,6 @@ export function DrawerFilter({
     }
   }, [handleScroll])
 
-  const todayDate = () => {
-    const todayBrFormat = new Date()
-      .toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
-      .split(',')[0]
-      .replaceAll('/', '-')
-    const todayUSFormat = `${todayBrFormat.split('-')[2]}-${todayBrFormat.split('-')[1]}-${todayBrFormat.split('-')[0]}`
-    setStartDate(todayUSFormat)
-  }
-
   return (
     <div className="block lg:hidden">
       <Drawer>
@@ -167,16 +158,9 @@ export function DrawerFilter({
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full rounded-md border p-1 pr-10 text-sm text-white 
+                    className="w-full rounded-md border p-1 text-sm text-white 
                               placeholder-white focus:ring-white"
                   />
-                  <Button
-                    type="button"
-                    onClick={todayDate} // função que você definir
-                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 bg-black p-0 hover:bg-black"
-                  >
-                    <CalendarIcon className="h-4 w-4 text-white opacity-50" />
-                  </Button>
                 </div>
               </div>
 
@@ -212,6 +196,33 @@ export function DrawerFilter({
                   </SelectContent>
                 </Select>
               </div>
+
+              <Button
+                onClick={() => {
+                  const today = new Date().toISOString().split('T')[0]
+                  setStartDate(today)
+                  setEndDate('')
+                }}
+                variant="outline"
+                className="flex w-full items-center gap-2 text-sm"
+              >
+                <CalendarIcon className="h-4 w-4" />
+                Ocultar eventos passados
+              </Button>
+
+              <Button
+                onClick={() => {
+                  setMode('')
+                  setLocation('')
+                  setStartDate('')
+                  setEndDate('')
+                }}
+                variant="ghost"
+                className="flex w-full items-center gap-2 text-sm text-red-500"
+              >
+                <XCircleIcon className="h-4 w-4" />
+                Limpar filtros
+              </Button>
             </div>
 
             <DrawerFooter className="space-x-2">
