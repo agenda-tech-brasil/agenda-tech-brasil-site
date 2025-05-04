@@ -67,7 +67,7 @@ export default function EventList({ initialEvents }: Props) {
       const nomeMes = monthNames[hoje.getMonth()]
       const el = document.getElementById(`month-${nomeMes}`)
       if (el) {
-        const yOffset = -75
+        const yOffset = -85
         const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset
         window.scrollTo({ top: y, behavior: 'smooth' })
       }
