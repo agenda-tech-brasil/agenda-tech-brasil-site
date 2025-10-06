@@ -12,6 +12,7 @@ import Footer from './Footer'
 import NoEvents from './NoEvents'
 import { RowFilter } from './RowFilter'
 import ScreenSizeButton from './ScreenSizeButton'
+import { ThemeToggle } from './ThemeToggle'
 import { SparklesTextTitle } from './TitleSparklesText'
 
 interface Props {
@@ -102,15 +103,22 @@ export default function EventList({ initialEvents }: Props) {
       {process.env.NODE_ENV === 'development' && <ScreenSizeButton />}
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex flex-col items-center gap-2 lg:gap-4">
-          <Image
-            className="rounded-full"
-            src="/agenda-tech.png"
-            alt="Logo"
-            width={150}
-            height={150}
-            unoptimized
-          />
-          <SparklesTextTitle />
+          <div className="relative w-full">
+            <div className="absolute right-0 top-0">
+              <ThemeToggle />
+            </div>
+            <div className="flex flex-col items-center gap-2 lg:gap-4">
+              <Image
+                className="rounded-full"
+                src="/agenda-tech.png"
+                alt="Logo"
+                width={150}
+                height={150}
+                unoptimized
+              />
+              <SparklesTextTitle />
+            </div>
+          </div>
         </div>
 
         <DrawerFilter {...sharedFilterProps} />
