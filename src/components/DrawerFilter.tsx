@@ -32,6 +32,8 @@ interface DrawerFilterProps {
   years: string[]
   selectedYear: string
   onYearChange: (year: string) => void
+  selectedMonth: string
+  onMonthChange: (month: string) => void
   location: string
   setLocation: (location: string) => void
   startDate: string
@@ -51,6 +53,8 @@ export function DrawerFilter({
   years,
   selectedYear,
   onYearChange,
+  selectedMonth,
+  onMonthChange,
   location,
   setLocation,
   startDate,
@@ -79,6 +83,11 @@ export function DrawerFilter({
     })
     return Array.from(types)
   }, [eventsData])
+
+  const monthOptions = [
+    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+  ]
 
   const [showButton, setShowButton] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -134,6 +143,27 @@ export function DrawerFilter({
                 selectedYear={selectedYear}
                 years={years}
               />
+
+              {/* Filtro de Mês */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium">Mês</label>
+                <Select
+                  value={selectedMonth || 'all'}
+                  onValueChange={(val) => onMonthChange(val === 'all' ? '' : val)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Todos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    {monthOptions.map((month) => (
+                      <SelectItem key={month} value={month}>
+                        {month.charAt(0).toUpperCase() + month.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
               {/* Filtro de Localidade */}
               <div className="space-y-2">

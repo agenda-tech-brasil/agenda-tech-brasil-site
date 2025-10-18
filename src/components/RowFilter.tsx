@@ -21,6 +21,8 @@ interface RowFilterProps {
   years: string[]
   selectedYear: string
   onYearChange: (year: string) => void
+  selectedMonth: string
+  onMonthChange: (month: string) => void
   location: string
   setLocation: (location: string) => void
   startDate: string
@@ -36,6 +38,8 @@ export function RowFilter({
   years,
   selectedYear,
   onYearChange,
+  selectedMonth,
+  onMonthChange,
   location,
   setLocation,
   startDate,
@@ -72,7 +76,13 @@ export function RowFilter({
     setLocation('')
     setStartDate('')
     setEndDate('')
+    onMonthChange('')
   }
+
+  const monthOptions = [
+    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+  ]
 
   return (
     <div className="flex flex-wrap items-end justify-center gap-4 bg-background p-4 max-lg:hidden">
@@ -86,6 +96,29 @@ export function RowFilter({
           selectedYear={selectedYear}
           years={years}
         />
+      </div>
+
+      {/* Mês */}
+      <div className="flex flex-col">
+        <label className="mb-1 text-sm font-medium text-muted-foreground">
+          Mês
+        </label>
+        <Select
+          value={selectedMonth || 'all'}
+          onValueChange={(val) => onMonthChange(val === 'all' ? '' : val)}
+        >
+          <SelectTrigger className="w-36">
+            <SelectValue placeholder="Todos" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos</SelectItem>
+            {monthOptions.map((month) => (
+              <SelectItem key={month} value={month}>
+                {month.charAt(0).toUpperCase() + month.slice(1)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Tipo */}

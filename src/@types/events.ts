@@ -23,6 +23,16 @@ export interface Evento {
   meses: Mese[]
 }
 
+// Nova interface para filtros
+export interface EventFilters {
+  year?: string
+  location?: string
+  type?: string
+  startDate?: string
+  endDate?: string
+  month?: string // Novo filtro por mês
+}
+
 export interface Tba {
   nome: string
   url: string
