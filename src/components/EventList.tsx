@@ -25,6 +25,7 @@ export default function EventList({ initialEvents }: Props) {
   const [selectedYear, setSelectedYear] = useState(() =>
     new Date().getFullYear().toString(),
   )
+  const [selectedMonth, setSelectedMonth] = useState('')
   const [local, setLocal] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
@@ -43,10 +44,11 @@ export default function EventList({ initialEvents }: Props) {
       type: tipo,
       startDate,
       endDate,
+      month: selectedMonth,
     }
     setFilteredEvents(applyEventFilters(eventos, filtros))
     setLoading(false)
-  }, [eventos, selectedYear, local, startDate, endDate, tipo])
+  }, [eventos, selectedYear, selectedMonth, local, startDate, endDate, tipo])
 
   useEffect(() => {
     if (!loading && filteredEvents.length > 0) {
@@ -79,6 +81,8 @@ export default function EventList({ initialEvents }: Props) {
     years: anos,
     selectedYear,
     onYearChange: setSelectedYear,
+    selectedMonth,
+    onMonthChange: setSelectedMonth,
     location: local,
     setLocation: setLocal,
     startDate,

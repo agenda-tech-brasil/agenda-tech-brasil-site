@@ -9,6 +9,7 @@ export function applyEventFilters(
     type?: string
     startDate?: string
     endDate?: string
+    month?: string
   },
 ): Evento[] {
   const monthMapping: Record<string, number> = {
@@ -31,6 +32,11 @@ export function applyEventFilters(
     .map((year) => ({
       ...year,
       meses: year.meses
+        .filter((mes) => 
+          filters.month 
+            ? mes.mes.toLowerCase() === filters.month.toLowerCase() 
+            : true
+        )
         .map((mes) => ({
           ...mes,
           eventos: mes.eventos.filter((ev) => {
