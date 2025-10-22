@@ -1,6 +1,6 @@
 import './globals.css'
 
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import Head from 'next/head'
 import { ThemeProvider } from '@/components/ThemeProvider'
@@ -79,14 +79,17 @@ export const metadata: Metadata = {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
     ],
- 
+
   },
   manifest: '/site.webmanifest',
+  category: 'technology',
+}
+
+export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
     { media: '(prefers-color-scheme: dark)', color: '#1a1a1a' },
   ],
-  category: 'technology',
 }
 
 export default function RootLayout({
@@ -96,16 +99,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br" suppressHydrationWarning>
-      <Head>
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <meta name="theme-color" content="#000000" />
-      </Head>
       <body className={`${inter.className} antialiased`}>
-        <ThemeProvider 
-          attribute="class" 
-          defaultTheme="dark" 
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
           enableSystem={true}
           disableTransitionOnChange
         >
