@@ -1,6 +1,5 @@
 import { CalendarIcon, ExternalLinkIcon, MapPinIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-
 import { CardContent, CardHeader } from '@/components/ui/card'
 
 interface Event {
@@ -26,7 +25,6 @@ const getBadgeColor = (tipo: string) => {
 }
 
 export function EventCard({ event, month }: { event: Event; month: string }) {
-  const [showPreview, setShowPreview] = useState(false)
   const [iframeAllowed, setIframeAllowed] = useState(true)
 
   const formattedDate =
@@ -43,7 +41,6 @@ export function EventCard({ event, month }: { event: Event; month: string }) {
 
   const shortMonth = month.slice(0, 3).toUpperCase()
 
-  // Bloquear URLs de sites que não permitem iframe
   useEffect(() => {
     const blockedDomains = [
       'https://www.meetup.com',
@@ -57,9 +54,9 @@ export function EventCard({ event, month }: { event: Event; month: string }) {
 
   const isPast = useMemo(() => {
     if (!event.data.length) return false
+
     const lastDay = event.data[event.data.length - 1]
 
-    // Mapeamento de meses em português para índices (0-11)
     const monthMap: { [key: string]: number } = {
       janeiro: 0,
       fevereiro: 1,
@@ -75,7 +72,6 @@ export function EventCard({ event, month }: { event: Event; month: string }) {
       dezembro: 11,
     }
 
-    // Converte para minúsculas e remove acentos para segurança
     const normalizedMonth = month
       .toLowerCase()
       .normalize('NFD')
@@ -83,101 +79,75 @@ export function EventCard({ event, month }: { event: Event; month: string }) {
 
     const monthIndex = monthMap[normalizedMonth]
     const currentYear = new Date().getFullYear()
-
     const eventDate = new Date(currentYear, monthIndex, parseInt(lastDay))
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
     return eventDate < today
   }, [event.data, month])
-  // Estilo adicional para eventos passados
+
   const cardStyle = isPast
-    ? 'opacity-75 grayscale-[40%] border-dashed'
+    ? 'opacity-75 grayscale-[35%] border-dashed border-gray-400'
     : 'border-green-600/50 hover:border-green-500'
 
   return (
     <div
-      className={`group relative mx-auto mt-2 w-full max-w-md lg:max-w-lg ${cardStyle}`}
-      onMouseEnter={() => setShowPreview(true)}
-      onMouseLeave={() => setShowPreview(false)}
+      className={`group relative mx-auto my-4 w-full h-fit rounded-xl border bg-background/40 transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-xl ${cardStyle}`}
     >
-      <div
-        className={`w-full overflow-hidden rounded-lg border transition-shadow hover:shadow-lg `}
+      <a
+        href={event.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block focus:outline-none focus:ring-2 focus:ring-primary rounded-xl overflow-hidden"
       >
-        <a
-          href={event.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block focus:outline-none focus:ring-2 focus:ring-primary"
-        >
-          <CardHeader className="bg-primary px-0 pb-1 pt-0.5 text-primary-foreground">
-            <h2 className="x2:pr-28 px-4 py-1.5 pr-36 text-left text-lg font-bold lg:text-xl">
+        <CardHeader className="relative bg-primary text-primary-foreground px-4 py-3">
+          <div className="flex justify-between items-start">
+            <h2 className="text-lg font-bold leading-snug lg:text-lg">
               {event.nome}
             </h2>
-            <div className="flex flex-row justify-between gap-2 px-3 pb-2">
-              <div>
-                <span
-                  className={`rounded-full px-2 py-0.5 text-xs text-zinc-50 md:text-sm ${getBadgeColor(
-                    event.tipo,
-                  )}`}
-                >
-                  {event.tipo}
+
+            <div className="text-right">
+              <div className="flex items-center gap-1 text-sm font-semibold">
+                <CalendarIcon size={16}  />
+                <span className='text-sm'>{`${formattedDate} • ${shortMonth}`}</span>
+              </div>
+              {isPast && (
+                <span className="text-[10px] font-semibold text-red-300 dark:text-red-600 tracking-wide">
+                  REALIZADO
                 </span>
-              </div>
-              <div>
-                {location && (
-                  <div className="flex items-center gap-1 text-sm md:text-base">
-                    <MapPinIcon size={16} />
-                    <h3>{location}</h3>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
+          </div>
+        </CardHeader>
 
-            <div className="absolute -top-[1.70rem] right-3 flex flex-col rounded-md border-t-[0.10px] border-primary/40 bg-primary/10 px-[0.25px]">
-              <span className="mt-1 flex flex-col items-center justify-center gap-2 text-base text-foreground md:text-lg">
-                {isPast && (
-                  <div className="absolute left-0 right-0 top-0 z-20 flex items-center justify-center rounded-t-lg bg-slate-900/90 py-[1px] text-xs font-semibold text-white">
-                    REALIZADO
-                  </div>
-                )}
-                <CalendarIcon size={14} />{' '}
-                <div className="flex">
-                  <span className="text-lg text-zinc-800 md:text-xl">
-                    {`${formattedDate} - ${shortMonth}`}
-                  </span>
-                </div>
-              </span>
-            </div>
-          </CardHeader>
-
-          {/* Prévia com IFRAME em forma de "nuvem" acima do card */}
-          {showPreview && iframeAllowed && (
-            <div className="absolute left-1/2 top-[-260px] z-20 h-[250px] w-[400px] -translate-x-1/2 rounded-lg border bg-white shadow-xl">
-              <iframe
-                src={event.url}
-                title="Prévia do Evento"
-                className="h-full w-full rounded-lg"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                onError={() => setIframeAllowed(false)}
-              />
-              {/* Seta apontando para baixo */}
-              <div className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-white"></div>
-            </div>
-          )}
-
-          <CardContent className="hidden bg-gradient-to-b from-primary/5 to-transparent p-2 group-hover:block">
-            <a
-              href={event.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 text-sm md:text-base"
+        <CardContent className="flex flex-col gap-2 px-4 py-3 bg-gradient-to-b from-primary/5 to-transparent">
+          <div className="flex items-center justify-between">
+            <span
+              className={`rounded-full px-2.5 py-[2px] text-xs font-medium ${getBadgeColor(
+                event.tipo,
+              )} shadow-sm`}
             >
-              SAIBA MAIS <ExternalLinkIcon size={17} className="mb-1" />
-            </a>
-          </CardContent>
-        </a>
-      </div>
+              {event.tipo}
+            </span>
+
+            {location && (
+              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <MapPinIcon size={14} className="opacity-80" />
+                <span>{location}</span>
+              </div>
+            )}
+          </div>
+        </CardContent>
+
+        <CardContent className="flex items-center justify-between px-4 py-2 text-sm text-primary group-hover:bg-primary/5 transition-colors">
+          <span className="flex items-center gap-2">
+            SAIBA MAIS <ExternalLinkIcon size={15} />
+          </span>
+          <span className="text-xs text-muted-foreground">
+            {new URL(event.url).hostname.replace('www.', '')}
+          </span>
+        </CardContent>
+      </a>
     </div>
   )
 }
