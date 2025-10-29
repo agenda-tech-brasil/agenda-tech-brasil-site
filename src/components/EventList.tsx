@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { Evento } from '@/@types/events'
 import { MONTH_NAMES } from '@/lib/constants'
+import { isEventPast } from '@/lib/dateUtils'
 import { getUniqueYears } from '@/lib/eventUtils'
 
 import { DrawerFilter } from './DrawerFilter'
@@ -62,13 +63,47 @@ export default function EventList({ initialEvents }: Props) {
 
   useEffect(() => {
     if (!loading && filteredEvents.length > 0) {
-      const hoje = new Date()
-      const nomeMes = MONTH_NAMES[hoje.getMonth()]
-      const el = document.getElementById(`month-${nomeMes}`)
-      if (el) {
-        const yOffset = -85
-        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset
-        window.scrollTo({ top: y, behavior: 'smooth' })
+      // Encontrar o primeiro evento não realizado
+      let firstUpcomingEventId: string | null = null
+
+      outerLoop: for (const yearData of filteredEvents) {
+        for (const mesData of yearData.meses) {
+          for (let idx = 0; idx < mesData.eventos.length; idx++) {
+            const evento = mesData.eventos[idx]
+            const eventIsPast = isEventPast(
+              evento.data,
+              mesData.mes,
+              yearData.ano,
+            )
+
+            if (!eventIsPast) {
+              firstUpcomingEventId = `event-${yearData.ano}-${mesData.mes}-${idx}`
+              break outerLoop
+            }
+          }
+        }
+      }
+
+      // Se encontrou um evento futuro, faz scroll até ele
+      if (firstUpcomingEventId) {
+        const el = document.getElementById(firstUpcomingEventId)
+        if (el) {
+          const yOffset = -100
+          const y =
+            el.getBoundingClientRect().top + window.pageYOffset + yOffset
+          window.scrollTo({ top: y, behavior: 'smooth' })
+        }
+      } else {
+        // Fallback: scroll para o mês atual se não houver eventos futuros
+        const hoje = new Date()
+        const nomeMes = MONTH_NAMES[hoje.getMonth()]
+        const el = document.getElementById(`month-${nomeMes}`)
+        if (el) {
+          const yOffset = -85
+          const y =
+            el.getBoundingClientRect().top + window.pageYOffset + yOffset
+          window.scrollTo({ top: y, behavior: 'smooth' })
+        }
       }
     }
   }, [filteredEvents, loading])
@@ -105,9 +140,8 @@ export default function EventList({ initialEvents }: Props) {
         <div className="mb-8 flex flex-col items-center gap-2 lg:gap-4">
           <div className="relative w-full">
             <div
-              className={`absolute right-0 top-0 transition-opacity duration-300 ${
-                isScrolled ? 'pointer-events-none opacity-0' : 'opacity-100'
-              }`}
+              className={`absolute right-0 top-0 transition-opacity duration-300 ${isScrolled ? 'pointer-events-none opacity-0' : 'opacity-100'
+                }`}
             >
               <ThemeToggle />
             </div>
@@ -163,12 +197,16 @@ export default function EventList({ initialEvents }: Props) {
                   </h3>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {mesData.eventos.map((evento, idx) => (
-                      <EventCard
+                      <div
                         key={`${evento.nome}-${idx}`}
-                        event={evento}
-                        month={mesData.mes}
-                        year={yearData.ano}
-                      />
+                        id={`event-${yearData.ano}-${mesData.mes}-${idx}`}
+                      >
+                        <EventCard
+                          event={evento}
+                          month={mesData.mes}
+                          year={yearData.ano}
+                        />
+                      </div>
                     ))}
                   </div>
                 </div>

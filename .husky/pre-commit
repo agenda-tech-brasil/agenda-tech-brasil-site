@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# 1. Valida o código
+npx lint-staged || exit 1
+
