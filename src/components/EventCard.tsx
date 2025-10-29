@@ -1,12 +1,9 @@
 import { CalendarIcon, ExternalLinkIcon, MapPinIcon } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
+
 import { CardContent, CardHeader } from '@/components/ui/card'
-import { BADGE_COLORS, BLOCKED_IFRAME_DOMAINS } from '@/lib/constants'
-import {
-  formatEventDate,
-  formatShortMonth,
-  isEventPast,
-} from '@/lib/dateUtils'
+import { BADGE_COLORS } from '@/lib/constants'
+import { formatEventDate, formatShortMonth, isEventPast } from '@/lib/dateUtils'
 import { formatEventLocation } from '@/lib/eventUtils'
 
 interface Event {
@@ -29,19 +26,9 @@ const getBadgeColor = (tipo: string): string => {
 }
 
 export function EventCard({ event, month, year }: EventCardProps) {
-  const [iframeAllowed, setIframeAllowed] = useState(true)
-
   const formattedDate = formatEventDate(event.data)
   const location = formatEventLocation(event.cidade, event.uf, event.tipo)
   const shortMonth = formatShortMonth(month)
-
-  useEffect(() => {
-    if (
-      BLOCKED_IFRAME_DOMAINS.some((domain) => event.url.startsWith(domain))
-    ) {
-      setIframeAllowed(false)
-    }
-  }, [event.url])
 
   const isPast = useMemo(() => {
     return isEventPast(event.data, month, year)
@@ -53,16 +40,16 @@ export function EventCard({ event, month, year }: EventCardProps) {
 
   return (
     <div
-      className={`group relative mx-auto my-4 w-full h-fit rounded-xl border bg-background/40 transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-xl ${cardStyle}`}
+      className={`group relative mx-auto my-4 h-fit w-full rounded-xl border bg-background/40 transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-xl ${cardStyle}`}
     >
       <a
         href={event.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block focus:outline-none focus:ring-2 focus:ring-primary rounded-xl overflow-hidden"
+        className="block overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
       >
-        <CardHeader className="relative bg-primary text-primary-foreground px-4 py-3">
-          <div className="flex justify-between items-start">
+        <CardHeader className="relative bg-primary px-4 py-3 text-primary-foreground">
+          <div className="flex items-start justify-between">
             <h2 className="text-lg font-bold leading-snug lg:text-lg">
               {event.nome}
             </h2>
@@ -70,10 +57,10 @@ export function EventCard({ event, month, year }: EventCardProps) {
             <div className="text-right">
               <div className="flex items-center gap-1 text-sm font-semibold">
                 <CalendarIcon size={16} />
-                <span className='text-sm'>{`${formattedDate} • ${shortMonth}`}</span>
+                <span className="text-sm">{`${formattedDate} • ${shortMonth}`}</span>
               </div>
               {isPast && (
-                <span className="text-[10px] font-semibold text-red-300 dark:text-red-600 tracking-wide">
+                <span className="text-[10px] font-semibold tracking-wide text-red-300 dark:text-red-600">
                   REALIZADO
                 </span>
               )}
@@ -81,7 +68,7 @@ export function EventCard({ event, month, year }: EventCardProps) {
           </div>
         </CardHeader>
 
-        <CardContent className="flex flex-col gap-2 px-4 py-3 bg-gradient-to-b from-primary/5 to-transparent">
+        <CardContent className="flex flex-col gap-2 bg-gradient-to-b from-primary/5 to-transparent px-4 py-3">
           <div className="flex items-center justify-between">
             <span
               className={`rounded-full px-2.5 py-[2px] text-xs font-medium ${getBadgeColor(
@@ -100,7 +87,7 @@ export function EventCard({ event, month, year }: EventCardProps) {
           </div>
         </CardContent>
 
-        <CardContent className="flex items-center justify-between px-4 py-2 text-sm text-primary group-hover:bg-primary/5 transition-colors">
+        <CardContent className="flex items-center justify-between px-4 py-2 text-sm text-primary transition-colors group-hover:bg-primary/5">
           <span className="flex items-center gap-2">
             SAIBA MAIS <ExternalLinkIcon size={15} />
           </span>

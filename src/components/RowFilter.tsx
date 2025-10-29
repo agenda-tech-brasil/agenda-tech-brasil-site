@@ -5,9 +5,6 @@ import * as React from 'react'
 import { useMemo } from 'react'
 
 import { Evento } from '@/@types/events'
-import { MONTH_NAMES } from '@/lib/constants'
-import { getTodayISO } from '@/lib/dateUtils'
-import { getUniqueEventTypes } from '@/lib/eventUtils'
 import {
   Select,
   SelectContent,
@@ -15,6 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { MONTH_NAMES } from '@/lib/constants'
+import { getTodayISO } from '@/lib/dateUtils'
+import { getUniqueEventTypes } from '@/lib/eventUtils'
 
 import { EventFilters } from './EventFilters'
 import { ThemeToggle } from './ThemeToggle'
@@ -77,8 +77,8 @@ export function RowFilter({
   const monthOptions = MONTH_NAMES
 
   return (
-    <div className="flex flex-wrap items-end justify-between gap-2 bg-background py-2 px-0 2xl:px-4 2xl:gap-4 max-lg:hidden">
-      <div className="flex flex-wrap items-end justify-center gap-2 2xl:gap-4 flex-1">
+    <div className="flex flex-wrap items-end justify-between gap-2 bg-background px-0 py-2 max-lg:hidden 2xl:gap-4 2xl:px-4">
+      <div className="flex flex-1 flex-wrap items-end justify-center gap-2 2xl:gap-4">
         {/* Ano */}
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-muted-foreground">
@@ -161,7 +161,7 @@ export function RowFilter({
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-32 xl:w-40 text-sm"
+              className="w-32 text-sm xl:w-40"
             />
           </div>
         </div>
@@ -175,16 +175,16 @@ export function RowFilter({
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="w-32 xl:w-40 text-sm"
+            className="w-32 text-sm xl:w-40"
           />
         </div>
 
         {/* Ações */}
-        <div className="flex flex-col gap-1 xl:gap-2 xl:flex-row">
+        <div className="flex flex-col gap-1 xl:flex-row xl:gap-2">
           <Button
             onClick={clearPastEvents}
             variant="outline"
-            className="flex items-center gap-1 xl:gap-2 bg-transparent text-xs px-2 xl:px-4"
+            className="flex items-center gap-1 bg-transparent px-2 text-xs xl:gap-2 xl:px-4"
           >
             <FilterIcon className="h-3 w-3 xl:h-4 xl:w-4" />
             <span className="hidden xl:inline">Ocultar passados</span>
@@ -193,7 +193,7 @@ export function RowFilter({
           <Button
             onClick={clearFilters}
             variant="ghost"
-            className="flex items-center gap-1 xl:gap-2 text-xs text-red-500 px-2 xl:px-4"
+            className="flex items-center gap-1 px-2 text-xs text-red-500 xl:gap-2 xl:px-4"
           >
             <XCircleIcon className="h-3 w-3 xl:h-4 xl:w-4" />
             <span className="hidden xl:inline">Limpar filtros</span>
@@ -204,7 +204,7 @@ export function RowFilter({
 
       {/* Theme Toggle - só aparece quando rolado */}
       {showThemeToggle && (
-        <div className="flex items-end animate-in fade-in duration-300">
+        <div className="flex items-end duration-300 animate-in fade-in">
           <ThemeToggle />
         </div>
       )}

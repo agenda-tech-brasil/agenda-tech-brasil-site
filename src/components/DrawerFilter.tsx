@@ -5,9 +5,6 @@ import * as React from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Evento } from '@/@types/events'
-import { MONTH_NAMES } from '@/lib/constants'
-import { getTodayISO } from '@/lib/dateUtils'
-import { getUniqueEventTypes } from '@/lib/eventUtils'
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
@@ -26,6 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { MONTH_NAMES } from '@/lib/constants'
+import { getTodayISO } from '@/lib/dateUtils'
+import { getUniqueEventTypes } from '@/lib/eventUtils'
 
 import { EventFilters } from './EventFilters'
 import { RainbowButtonFilter } from './RaibowButtonFilter'
@@ -139,7 +139,9 @@ export function DrawerFilter({
                 <label className="block text-sm font-medium">Mês</label>
                 <Select
                   value={selectedMonth || 'all'}
-                  onValueChange={(val) => onMonthChange(val === 'all' ? '' : val)}
+                  onValueChange={(val) =>
+                    onMonthChange(val === 'all' ? '' : val)
+                  }
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Todos" />

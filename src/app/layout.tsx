@@ -2,7 +2,7 @@ import './globals.css'
 
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
-import Head from 'next/head'
+
 import { ThemeProvider } from '@/components/ThemeProvider'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -76,10 +76,7 @@ export const metadata: Metadata = {
     images: ['/bg-preview.png'],
   },
   icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-    ],
-
+    icon: [{ url: '/favicon.ico', sizes: 'any' }],
   },
   manifest: '/site.webmanifest',
   category: 'technology',
@@ -99,10 +96,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br" suppressHydrationWarning>
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="msapplication-TileColor" content="#da532c" />
-        <meta name="msapplication-config" content="/browserconfig.xml" />
-        <meta name="theme-color" content="#000000" />
+      <link rel="manifest" href="/site.webmanifest" />
+      <meta name="msapplication-TileColor" content="#da532c" />
+      <meta name="msapplication-config" content="/browserconfig.xml" />
+      <meta name="theme-color" content="#000000" />
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider
           attribute="class"
