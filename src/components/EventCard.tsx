@@ -2,9 +2,9 @@ import { CalendarIcon, ExternalLinkIcon, MapPinIcon } from 'lucide-react'
 import { useMemo } from 'react'
 
 import { CardContent, CardHeader } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
 import { formatEventDate, formatShortMonth, isEventPast } from '@/lib/dateUtils'
 import { formatEventLocation } from '@/lib/eventUtils'
+import { cn } from '@/lib/utils'
 
 interface Event {
   nome: string
