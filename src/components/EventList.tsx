@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 
 import { Evento } from '@/@types/events'
+import { MONTH_NAMES } from '@/lib/constants'
+import { getUniqueYears } from '@/lib/eventUtils'
 
 import { DrawerFilter } from './DrawerFilter'
 import { EventCard } from './EventCard'
@@ -31,11 +33,19 @@ export default function EventList({ initialEvents }: Props) {
   const [endDate, setEndDate] = useState('')
   const [tipo, setTipo] = useState('')
   const [loading, setLoading] = useState(true)
+  const [isScrolled, setIsScrolled] = useState(false)
 
-  const anos = useMemo(
-    () => [...new Set(initialEvents.map((e) => e.ano.toString()))],
-    [initialEvents],
-  )
+  const anos = useMemo(() => getUniqueYears(initialEvents), [initialEvents])
+
+  // Detecta se rolou a página
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 200)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
     const filtros = {
@@ -52,22 +62,8 @@ export default function EventList({ initialEvents }: Props) {
 
   useEffect(() => {
     if (!loading && filteredEvents.length > 0) {
-      const monthNames = [
-        'janeiro',
-        'fevereiro',
-        'março',
-        'abril',
-        'maio',
-        'junho',
-        'julho',
-        'agosto',
-        'setembro',
-        'outubro',
-        'novembro',
-        'dezembro',
-      ]
       const hoje = new Date()
-      const nomeMes = monthNames[hoje.getMonth()]
+      const nomeMes = MONTH_NAMES[hoje.getMonth()]
       const el = document.getElementById(`month-${nomeMes}`)
       if (el) {
         const yOffset = -85
@@ -108,7 +104,10 @@ export default function EventList({ initialEvents }: Props) {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex flex-col items-center gap-2 lg:gap-4">
           <div className="relative w-full">
-            <div className="absolute right-0 top-0">
+            <div
+              className={`absolute right-0 top-0 transition-opacity duration-300 ${isScrolled ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                }`}
+            >
               <ThemeToggle />
             </div>
             <div className="flex flex-col items-center gap-2 lg:gap-4">
@@ -138,7 +137,11 @@ export default function EventList({ initialEvents }: Props) {
           </div>
         ) : (
           <div className="sticky top-0 z-20 bg-background py-2">
-            <RowFilter {...sharedFilterProps} eventsData={eventos} />
+            <RowFilter
+              {...sharedFilterProps}
+              eventsData={eventos}
+              showThemeToggle={isScrolled}
+            />
           </div>
         )}
 
@@ -163,6 +166,7 @@ export default function EventList({ initialEvents }: Props) {
                         key={`${evento.nome}-${idx}`}
                         event={evento}
                         month={mesData.mes}
+                        year={yearData.ano}
                       />
                     ))}
                   </div>

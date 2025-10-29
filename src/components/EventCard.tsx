@@ -1,6 +1,13 @@
 import { CalendarIcon, ExternalLinkIcon, MapPinIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { CardContent, CardHeader } from '@/components/ui/card'
+import { BADGE_COLORS, BLOCKED_IFRAME_DOMAINS } from '@/lib/constants'
+import {
+  formatEventDate,
+  formatShortMonth,
+  isEventPast,
+} from '@/lib/dateUtils'
+import { formatEventLocation } from '@/lib/eventUtils'
 
 interface Event {
   nome: string
@@ -11,80 +18,34 @@ interface Event {
   tipo: string
 }
 
-const getBadgeColor = (tipo: string) => {
-  switch (tipo) {
-    case 'presencial':
-      return 'bg-sky-600/90'
-    case 'híbrido':
-      return 'bg-purple-900/80'
-    case 'online':
-      return 'bg-orange-600/90'
-    default:
-      return 'bg-background/20'
-  }
+interface EventCardProps {
+  event: Event
+  month: string
+  year: number
 }
 
-export function EventCard({ event, month }: { event: Event; month: string }) {
+const getBadgeColor = (tipo: string): string => {
+  return BADGE_COLORS[tipo as keyof typeof BADGE_COLORS] || BADGE_COLORS.default
+}
+
+export function EventCard({ event, month, year }: EventCardProps) {
   const [iframeAllowed, setIframeAllowed] = useState(true)
 
-  const formattedDate =
-    event.data.length > 1
-      ? `${event.data[0]} - ${event.data[event.data.length - 1]}`
-      : event.data[0]
-
-  const location =
-    event.cidade && event.uf
-      ? `${event.cidade}, ${event.uf}`
-      : event.tipo === 'online'
-        ? ''
-        : 'Sem informação de local'
-
-  const shortMonth = month.slice(0, 3).toUpperCase()
+  const formattedDate = formatEventDate(event.data)
+  const location = formatEventLocation(event.cidade, event.uf, event.tipo)
+  const shortMonth = formatShortMonth(month)
 
   useEffect(() => {
-    const blockedDomains = [
-      'https://www.meetup.com',
-      'https://www.sympla.com.br',
-      'https://www.instagram.com',
-    ]
-    if (blockedDomains.some((domain) => event.url.startsWith(domain))) {
+    if (
+      BLOCKED_IFRAME_DOMAINS.some((domain) => event.url.startsWith(domain))
+    ) {
       setIframeAllowed(false)
     }
   }, [event.url])
 
   const isPast = useMemo(() => {
-    if (!event.data.length) return false
-
-    const lastDay = event.data[event.data.length - 1]
-
-    const monthMap: { [key: string]: number } = {
-      janeiro: 0,
-      fevereiro: 1,
-      março: 2,
-      abril: 3,
-      maio: 4,
-      junho: 5,
-      julho: 6,
-      agosto: 7,
-      setembro: 8,
-      outubro: 9,
-      novembro: 10,
-      dezembro: 11,
-    }
-
-    const normalizedMonth = month
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-
-    const monthIndex = monthMap[normalizedMonth]
-    const currentYear = new Date().getFullYear()
-    const eventDate = new Date(currentYear, monthIndex, parseInt(lastDay))
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    return eventDate < today
-  }, [event.data, month])
+    return isEventPast(event.data, month, year)
+  }, [event.data, month, year])
 
   const cardStyle = isPast
     ? 'opacity-75 grayscale-[35%] border-dashed border-gray-400'
@@ -108,7 +69,7 @@ export function EventCard({ event, month }: { event: Event; month: string }) {
 
             <div className="text-right">
               <div className="flex items-center gap-1 text-sm font-semibold">
-                <CalendarIcon size={16}  />
+                <CalendarIcon size={16} />
                 <span className='text-sm'>{`${formattedDate} • ${shortMonth}`}</span>
               </div>
               {isPast && (

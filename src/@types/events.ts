@@ -7,7 +7,7 @@ export interface Evento2 {
   tipo: string
 }
 
-export interface Mese {
+export interface Meses {
   mes: string
   arquivado: boolean
   eventos: Evento2[]
@@ -20,7 +20,7 @@ export interface Evento {
   localidade: string // Replaced 'any' with 'string'
   ano: number
   arquivado: boolean
-  meses: Mese[]
+  meses: Meses[]
 }
 
 // Nova interface para filtros

@@ -5,6 +5,9 @@ import * as React from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Evento } from '@/@types/events'
+import { MONTH_NAMES } from '@/lib/constants'
+import { getTodayISO } from '@/lib/dateUtils'
+import { getUniqueEventTypes } from '@/lib/eventUtils'
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
@@ -71,23 +74,10 @@ export function DrawerFilter({
     if (!eventsData) {
       return ['online', 'híbrido', 'presencial']
     }
-    const types = new Set<string>()
-    eventsData.forEach((yearData) => {
-      yearData.meses.forEach((mes) => {
-        mes.eventos.forEach((evento) => {
-          if (evento.tipo) {
-            types.add(evento.tipo.toLowerCase())
-          }
-        })
-      })
-    })
-    return Array.from(types)
+    return getUniqueEventTypes(eventsData)
   }, [eventsData])
 
-  const monthOptions = [
-    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
-  ]
+  const monthOptions = MONTH_NAMES
 
   const [showButton, setShowButton] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -229,8 +219,7 @@ export function DrawerFilter({
 
               <Button
                 onClick={() => {
-                  const today = new Date().toISOString().split('T')[0]
-                  setStartDate(today)
+                  setStartDate(getTodayISO())
                   setEndDate('')
                 }}
                 variant="outline"
