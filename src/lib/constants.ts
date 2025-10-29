@@ -43,7 +43,7 @@ export const BADGE_COLORS = {
   presencial: 'bg-sky-600/90',
   híbrido: 'bg-purple-900/80',
   online: 'bg-orange-600/90',
-  default: 'bg-background/20',
+  default: 'bg-gray-600/20',
 } as const
 
 export const BLOCKED_IFRAME_DOMAINS = [

@@ -2,7 +2,7 @@ import { CalendarIcon, ExternalLinkIcon, MapPinIcon } from 'lucide-react'
 import { useMemo } from 'react'
 
 import { CardContent, CardHeader } from '@/components/ui/card'
-import { BADGE_COLORS } from '@/lib/constants'
+import { cn } from '@/lib/utils'
 import { formatEventDate, formatShortMonth, isEventPast } from '@/lib/dateUtils'
 import { formatEventLocation } from '@/lib/eventUtils'
 
@@ -19,10 +19,6 @@ interface EventCardProps {
   event: Event
   month: string
   year: number
-}
-
-const getBadgeColor = (tipo: string): string => {
-  return BADGE_COLORS[tipo as keyof typeof BADGE_COLORS] || BADGE_COLORS.default
 }
 
 export function EventCard({ event, month, year }: EventCardProps) {
@@ -71,9 +67,14 @@ export function EventCard({ event, month, year }: EventCardProps) {
         <CardContent className="flex flex-col gap-2 bg-gradient-to-b from-primary/5 to-transparent px-4 py-3">
           <div className="flex items-center justify-between">
             <span
-              className={`rounded-full px-2.5 py-[2px] text-xs font-medium ${getBadgeColor(
-                event.tipo,
-              )} shadow-sm`}
+              className={cn(
+                'rounded-full px-2.5 py-[2px] text-xs font-medium text-white shadow-sm',
+                event.tipo === 'presencial' && 'bg-sky-600/90',
+                event.tipo === 'híbrido' && 'bg-purple-900/80',
+                event.tipo === 'online' && 'bg-orange-600/90',
+                !['presencial', 'híbrido', 'online'].includes(event.tipo) &&
+                  'bg-gray-600/20',
+              )}
             >
               {event.tipo}
             </span>
