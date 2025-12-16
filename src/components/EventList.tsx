@@ -124,15 +124,6 @@ export default function EventList({ initialEvents }: Props) {
     setMode: setTipo,
   }
 
-  if (!loading && filteredEvents.length === 0) {
-    return (
-      <div className="min-h-screen bg-background">
-        <NoEvents />
-        <Footer />
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-background">
       {process.env.NODE_ENV === 'development' && <ScreenSizeButton />}
@@ -140,8 +131,9 @@ export default function EventList({ initialEvents }: Props) {
         <div className="mb-8 flex flex-col items-center gap-2 lg:gap-4">
           <div className="relative w-full">
             <div
-              className={`absolute right-0 top-0 transition-opacity duration-300 ${isScrolled ? 'pointer-events-none opacity-0' : 'opacity-100'
-                }`}
+              className={`absolute right-0 top-0 transition-opacity duration-300 ${
+                isScrolled ? 'pointer-events-none opacity-0' : 'opacity-100'
+              }`}
             >
               <ThemeToggle />
             </div>
@@ -213,6 +205,7 @@ export default function EventList({ initialEvents }: Props) {
               ))}
             </div>
           ))}
+        {!loading && filteredEvents.length === 0 && <NoEvents />}
       </div>
       <Footer />
     </div>
