@@ -46,7 +46,7 @@ Componente principal que:
 
 Card individual de evento que:
 
-- **RECEBE O ANO** como prop (importante para bug fix)
+- **RECEBE O ANO** como prop
 - Calcula se evento já passou
 - Mostra badge "REALIZADO" para eventos passados
 - Aplica estilo diferente (grayscale) para eventos passados
