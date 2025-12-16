@@ -14,23 +14,23 @@ export interface Meses {
 }
 
 export interface Evento {
-  modelo: string // Replaced 'any' with a more specific type
+  modelo: string 
   dataFim: string | number | Date
   dataInicio: string | number | Date
-  localidade: string // Replaced 'any' with 'string'
+  localidade: string 
   ano: number
   arquivado: boolean
   meses: Meses[]
 }
 
-// Nova interface para filtros
+
 export interface EventFilters {
   year?: string
   location?: string
   type?: string
   startDate?: string
   endDate?: string
-  month?: string // Novo filtro por mês
+  month?: string 
 }
 
 export interface Tba {
