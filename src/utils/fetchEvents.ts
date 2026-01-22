@@ -8,6 +8,5 @@ export async function fetchEvents(): Promise<Evento[]> {
     throw new Error('Failed to fetch events')
   }
   const data = await response.json()
-  console.log("🚀 ~ fetchEvents ~ data:", data)
   return data.eventos
 }
