@@ -14,15 +14,14 @@ export interface Meses {
 }
 
 export interface Evento {
-  modelo: string 
+  modelo: string
   dataFim: string | number | Date
   dataInicio: string | number | Date
-  localidade: string 
+  localidade: string
   ano: number
   arquivado: boolean
   meses: Meses[]
 }
-
 
 export interface EventFilters {
   year?: string
@@ -30,7 +29,7 @@ export interface EventFilters {
   type?: string
   startDate?: string
   endDate?: string
-  month?: string 
+  month?: string
 }
 
 export interface Tba {
