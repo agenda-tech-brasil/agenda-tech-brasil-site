@@ -1,0 +1,335 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Agenda Tech Brasil API",
+    "description": "API para consulta de eventos técnicos no Brasil. Lista eventos de tecnologia com filtros por tipo, localização, data e outras características.\n\n**Nota:** Esta API funciona apenas em modo de desenvolvimento local. No GitHub Pages (produção), apenas a documentação e especificação OpenAPI estarão disponíveis como arquivos estáticos.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Agenda Tech Brasil",
+      "url": "https://github.com/agenda-tech-brasil/agenda-tech-brasil-site"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor de desenvolvimento (API funcional)"
+    }
+  ],
+  "paths": {
+    "/api/events": {
+      "get": {
+        "summary": "Listar eventos",
+        "description": "Retorna uma lista de eventos técnicos, com suporte a diversos filtros para refinar a busca.",
+        "operationId": "getEvents",
+        "tags": ["Eventos"],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "description": "Filtrar eventos por ano",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2026"
+            }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "description": "Filtrar eventos por cidade (busca parcial)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "São Paulo"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filtrar eventos por tipo (presencial, online, híbrido)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["presencial", "online", "híbrido"],
+              "example": "online"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "description": "Filtrar eventos por mês",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "janeiro",
+                "fevereiro",
+                "março",
+                "abril",
+                "maio",
+                "junho",
+                "julho",
+                "agosto",
+                "setembro",
+                "outubro",
+                "novembro",
+                "dezembro"
+              ],
+              "example": "março"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Data inicial para filtrar eventos (formato ISO 8601)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2026-01-01"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "Data final para filtrar eventos (formato ISO 8601)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2026-12-31"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de eventos retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EventoAno"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Número total de anos com eventos",
+                      "example": 1
+                    }
+                  }
+                },
+                "examples": {
+                  "eventosOnline": {
+                    "summary": "Exemplo de eventos online",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "modelo": "evento",
+                          "dataFim": "2026-12-31",
+                          "dataInicio": "2026-01-01",
+                          "localidade": "Brasil",
+                          "ano": 2026,
+                          "arquivado": false,
+                          "meses": [
+                            {
+                              "mes": "março",
+                              "arquivado": false,
+                              "eventos": [
+                                {
+                                  "nome": "Tech Conference Online",
+                                  "data": ["15", "16"],
+                                  "url": "https://example.com/event",
+                                  "cidade": "",
+                                  "uf": "",
+                                  "tipo": "online"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "total": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida - parâmetros incorretos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "success": false,
+                  "error": "Parâmetro inválido: type deve ser 'presencial', 'online' ou 'híbrido'"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "success": false,
+                  "error": "Erro ao buscar eventos. Por favor, tente novamente mais tarde."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EventoAno": {
+        "type": "object",
+        "properties": {
+          "modelo": {
+            "type": "string",
+            "description": "Modelo do evento",
+            "example": "evento"
+          },
+          "dataFim": {
+            "type": "string",
+            "format": "date",
+            "description": "Data final do período de eventos do ano",
+            "example": "2026-12-31"
+          },
+          "dataInicio": {
+            "type": "string",
+            "format": "date",
+            "description": "Data inicial do período de eventos do ano",
+            "example": "2026-01-01"
+          },
+          "localidade": {
+            "type": "string",
+            "description": "Localidade geral",
+            "example": "Brasil"
+          },
+          "ano": {
+            "type": "integer",
+            "description": "Ano dos eventos",
+            "example": 2026
+          },
+          "arquivado": {
+            "type": "boolean",
+            "description": "Indica se o ano está arquivado",
+            "example": false
+          },
+          "meses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Mes"
+            }
+          }
+        },
+        "required": ["modelo", "ano", "meses"]
+      },
+      "Mes": {
+        "type": "object",
+        "properties": {
+          "mes": {
+            "type": "string",
+            "description": "Nome do mês em português",
+            "example": "março"
+          },
+          "arquivado": {
+            "type": "boolean",
+            "description": "Indica se o mês está arquivado",
+            "example": false
+          },
+          "eventos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventoDetalhado"
+            }
+          }
+        },
+        "required": ["mes", "eventos"]
+      },
+      "EventoDetalhado": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome do evento",
+            "example": "Tech Conference 2026"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array com os dias do evento (formato string)",
+            "example": ["15", "16"]
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL do evento",
+            "example": "https://example.com/event"
+          },
+          "cidade": {
+            "type": "string",
+            "description": "Cidade onde ocorre o evento",
+            "example": "São Paulo"
+          },
+          "uf": {
+            "type": "string",
+            "description": "Unidade federativa (estado) onde ocorre o evento",
+            "example": "SP"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": ["presencial", "online", "híbrido"],
+            "description": "Tipo do evento",
+            "example": "presencial"
+          }
+        },
+        "required": ["nome", "data", "url", "tipo"]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "type": "string",
+            "description": "Mensagem de erro",
+            "example": "Erro ao processar requisição"
+          }
+        },
+        "required": ["success", "error"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Eventos",
+      "description": "Operações relacionadas aos eventos técnicos"
+    }
+  ]
+}

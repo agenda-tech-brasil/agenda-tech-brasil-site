@@ -73,7 +73,7 @@ export function EventCard({ event, month, year }: EventCardProps) {
                 event.tipo === 'híbrido' && 'bg-purple-900/80',
                 event.tipo === 'online' && 'bg-orange-600/90',
                 !['presencial', 'híbrido', 'online'].includes(event.tipo) &&
-                'bg-gray-600/20',
+                  'bg-gray-600/20',
               )}
             >
               {event.tipo}
