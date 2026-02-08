@@ -12,6 +12,13 @@
 
 ---
 
+## 📖 Documentação da API (Swagger)
+
+- Produção: https://agenda-tech-brasil-site.js.org/api/docs
+- Local: http://localhost:3000/api/docs
+
+---
+
 ## 🛠️ Tecnologias Utilizadas
 
 - **Next.js**: Framework React para aplicações web modernas.

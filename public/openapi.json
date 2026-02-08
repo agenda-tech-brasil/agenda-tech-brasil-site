@@ -29,7 +29,9 @@
         "summary": "Listar eventos",
         "description": "Retorna uma lista de eventos técnicos, com suporte a diversos filtros para refinar a busca.",
         "operationId": "getEvents",
-        "tags": ["Eventos"],
+        "tags": [
+          "Eventos"
+        ],
         "parameters": [
           {
             "name": "year",
@@ -58,7 +60,11 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["presencial", "online", "híbrido"],
+              "enum": [
+                "presencial",
+                "online",
+                "híbrido"
+              ],
               "example": "online"
             }
           },
@@ -154,7 +160,10 @@
                               "eventos": [
                                 {
                                   "nome": "Tech Conference Online",
-                                  "data": ["15", "16"],
+                                  "data": [
+                                    "15",
+                                    "16"
+                                  ],
                                   "url": "https://example.com/event",
                                   "cidade": "",
                                   "uf": "",
@@ -248,7 +257,11 @@
             }
           }
         },
-        "required": ["modelo", "ano", "meses"]
+        "required": [
+          "modelo",
+          "ano",
+          "meses"
+        ]
       },
       "Mes": {
         "type": "object",
@@ -270,7 +283,10 @@
             }
           }
         },
-        "required": ["mes", "eventos"]
+        "required": [
+          "mes",
+          "eventos"
+        ]
       },
       "EventoDetalhado": {
         "type": "object",
@@ -286,7 +302,10 @@
               "type": "string"
             },
             "description": "Array com os dias do evento (formato string)",
-            "example": ["15", "16"]
+            "example": [
+              "15",
+              "16"
+            ]
           },
           "url": {
             "type": "string",
@@ -306,12 +325,21 @@
           },
           "tipo": {
             "type": "string",
-            "enum": ["presencial", "online", "híbrido"],
+            "enum": [
+              "presencial",
+              "online",
+              "híbrido"
+            ],
             "description": "Tipo do evento",
             "example": "presencial"
           }
         },
-        "required": ["nome", "data", "url", "tipo"]
+        "required": [
+          "nome",
+          "data",
+          "url",
+          "tipo"
+        ]
       },
       "Error": {
         "type": "object",
@@ -326,7 +354,10 @@
             "example": "Erro ao processar requisição"
           }
         },
-        "required": ["success", "error"]
+        "required": [
+          "success",
+          "error"
+        ]
       }
     }
   },

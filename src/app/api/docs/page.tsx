@@ -47,21 +47,19 @@ export default function ApiDocsPage() {
             <div className="flex space-x-4">
               <button
                 onClick={() => setActiveTab('swagger')}
-                className={`px-4 py-2 font-medium ${
-                  activeTab === 'swagger'
+                className={`px-4 py-2 font-medium ${activeTab === 'swagger'
                     ? 'border-b-2 border-blue-500 text-blue-600'
                     : 'text-gray-500 hover:text-gray-700'
-                }`}
+                  }`}
               >
                 Swagger UI
               </button>
               <button
                 onClick={() => setActiveTab('scalar')}
-                className={`px-4 py-2 font-medium ${
-                  activeTab === 'scalar'
+                className={`px-4 py-2 font-medium ${activeTab === 'scalar'
                     ? 'border-b-2 border-blue-500 text-blue-600'
                     : 'text-gray-500 hover:text-gray-700'
-                }`}
+                  }`}
               >
                 Scalar
               </button>
