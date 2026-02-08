@@ -45,6 +45,15 @@ export default function Footer() {
         </div>
         <LinksWithIcons />
         <div className="mt-8 text-center text-sm text-gray-400">
+          Agora temos Swagger para consultar a API em{' '}
+          <Link
+            href="https://agenda-tech-brasil-site.js.org/api/docs"
+            className="text-primary underline"
+          >
+            https://agenda-tech-brasil-site.js.org/api/docs
+          </Link>
+        </div>
+        <div className="mt-2 text-center text-sm text-gray-400">
           Feito com 💚 por Eventos Tech Brasil
         </div>
       </div>

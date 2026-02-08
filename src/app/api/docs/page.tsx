@@ -6,7 +6,6 @@ import 'swagger-ui-react/swagger-ui.css'
 import { ApiReferenceReact } from '@scalar/api-reference-react'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
-import { usePathname } from 'next/navigation'
 
 const SwaggerUI = dynamic(() => import('swagger-ui-react'), {
   ssr: false,
@@ -26,10 +25,6 @@ const SwaggerUI = dynamic(() => import('swagger-ui-react'), {
 
 export default function ApiDocsPage() {
   const [activeTab, setActiveTab] = useState<'swagger' | 'scalar'>('swagger')
-  const url = usePathname()
-  console.log("🚀 ~ ApiDocsPage ~ url:", url)
-
-
   const openapiUrl = `/openapi.json`
 
   return (
