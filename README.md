@@ -59,7 +59,7 @@
 
 4. Abra [http://localhost:3000](http://localhost:3000) no navegador para visualizar o projeto.
 5. Como contribuir?
-[Link da estrutura do projeto](https://github.com/agenda-tech-brasil/agenda-tech-brasil-site/blob/main/STRUCTURE.md)
+   [Link da estrutura do projeto](https://github.com/agenda-tech-brasil/agenda-tech-brasil-site/blob/main/STRUCTURE.md)
 
 ---
 
