@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Agenda Tech Brasil API",
-    "description": "API para consulta de eventos técnicos no Brasil. Lista eventos de tecnologia com filtros por tipo, localização, data e outras características.",
+    "description": "API para consulta de eventos técnicos no Brasil. Lista eventos de tecnologia com filtros por tipo, localização, data e outras características.\n\n**Nota:** Esta API funciona apenas em modo de desenvolvimento local. No GitHub Pages (produção), apenas a documentação e especificação OpenAPI estarão disponíveis como arquivos estáticos.",
     "version": "1.0.0",
     "contact": {
       "name": "Agenda Tech Brasil",
@@ -16,11 +16,7 @@
   "servers": [
     {
       "url": "http://localhost:3000",
-      "description": "Servidor de desenvolvimento"
-    },
-    {
-      "url": "https://agenda-tech-brasil.js.org/agenda-tech-brasil-site",
-      "description": "Servidor de produção (GitHub Pages)"
+      "description": "Servidor de desenvolvimento (API funcional)"
     }
   ],
   "paths": {

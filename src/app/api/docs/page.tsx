@@ -34,25 +34,37 @@ export default function ApiDocsPage() {
       process.env.NODE_ENV === 'production' ? '/agenda-tech-brasil-site' : ''
     const openapiUrl = `${basePath}/openapi.json`
 
+    // Track created elements for cleanup
+    const createdElements: HTMLElement[] = []
+
     // Carregar Swagger UI
     const loadSwaggerUI = () => {
       const link = document.createElement('link')
       link.rel = 'stylesheet'
       link.href = 'https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css'
       document.head.appendChild(link)
+      createdElements.push(link)
 
       const script1 = document.createElement('script')
       script1.src =
         'https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js'
       script1.async = true
+      createdElements.push(script1)
 
       const script2 = document.createElement('script')
       script2.src =
         'https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js'
       script2.async = true
+      createdElements.push(script2)
 
-      script2.onload = () => {
+      // Wait for both scripts to load before initializing
+      let script1Loaded = false
+      let script2Loaded = false
+
+      const tryInitSwagger = () => {
         if (
+          script1Loaded &&
+          script2Loaded &&
           typeof window !== 'undefined' &&
           window.SwaggerUIBundle &&
           swaggerContainerRef.current
@@ -77,6 +89,16 @@ export default function ApiDocsPage() {
         }
       }
 
+      script1.onload = () => {
+        script1Loaded = true
+        tryInitSwagger()
+      }
+
+      script2.onload = () => {
+        script2Loaded = true
+        tryInitSwagger()
+      }
+
       document.body.appendChild(script1)
       document.body.appendChild(script2)
     }
@@ -86,7 +108,10 @@ export default function ApiDocsPage() {
       const script = document.createElement('script')
       script.src = 'https://cdn.jsdelivr.net/npm/@scalar/api-reference'
       script.async = true
+      createdElements.push(script)
 
+      // Delay to ensure Scalar library is fully loaded before initialization
+      const SCALAR_INIT_DELAY = 500
       script.onload = () => {
         setTimeout(() => {
           if (
@@ -102,7 +127,7 @@ export default function ApiDocsPage() {
               showSidebar: true,
             })
           }
-        }, 500)
+        }, SCALAR_INIT_DELAY)
       }
 
       document.body.appendChild(script)
@@ -112,7 +137,10 @@ export default function ApiDocsPage() {
     loadScalar()
 
     return () => {
-      // Cleanup scripts if needed
+      // Cleanup: remove all created elements
+      createdElements.forEach((element) => {
+        element.parentNode?.removeChild(element)
+      })
     }
   }, [])
 
