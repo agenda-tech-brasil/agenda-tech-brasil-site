@@ -7,6 +7,7 @@ import { Evento } from '@/@types/events'
 import { MONTH_NAMES } from '@/lib/constants'
 import { isEventPast } from '@/lib/dateUtils'
 import { getUniqueYears } from '@/lib/eventUtils'
+import { fetchEvents } from '@/utils/fetchEvents'
 
 import { DrawerFilter } from './DrawerFilter'
 import { EventCard } from './EventCard'
@@ -23,7 +24,7 @@ interface Props {
 }
 
 export default function EventList({ initialEvents }: Props) {
-  const eventos = initialEvents
+  const [eventsData, setEventsData] = useState<Evento[]>(initialEvents)
   const [filteredEvents, setFilteredEvents] = useState<Evento[]>([])
   const [selectedYear, setSelectedYear] = useState(() =>
     new Date().getFullYear().toString(),
@@ -36,7 +37,35 @@ export default function EventList({ initialEvents }: Props) {
   const [loading, setLoading] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
 
-  const anos = useMemo(() => getUniqueYears(initialEvents), [initialEvents])
+  const anos = useMemo(() => getUniqueYears(eventsData), [eventsData])
+
+  useEffect(() => {
+    const abortController = new AbortController()
+
+    const loadFreshEvents = async () => {
+      try {
+        const freshEvents = await fetchEvents({
+          signal: abortController.signal,
+          cache: 'no-store',
+        })
+        setEventsData(freshEvents)
+      } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          return
+        }
+        console.error(
+          'Error fetching fresh events, using build-time fallback data:',
+          error,
+        )
+      }
+    }
+
+    loadFreshEvents()
+
+    return () => {
+      abortController.abort()
+    }
+  }, [])
 
   // Detecta se rolou a página
   useEffect(() => {
@@ -57,9 +86,9 @@ export default function EventList({ initialEvents }: Props) {
       endDate,
       month: selectedMonth,
     }
-    setFilteredEvents(applyEventFilters(eventos, filtros))
+    setFilteredEvents(applyEventFilters(eventsData, filtros))
     setLoading(false)
-  }, [eventos, selectedYear, selectedMonth, local, startDate, endDate, tipo])
+  }, [eventsData, selectedYear, selectedMonth, local, startDate, endDate, tipo])
 
   useEffect(() => {
     if (!loading && filteredEvents.length > 0) {
@@ -166,7 +195,7 @@ export default function EventList({ initialEvents }: Props) {
           <div className="sticky top-0 z-20 bg-background py-2">
             <RowFilter
               {...sharedFilterProps}
-              eventsData={eventos}
+              eventsData={eventsData}
               showThemeToggle={isScrolled}
             />
           </div>
