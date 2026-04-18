@@ -40,15 +40,19 @@ export default function EventList({ initialEvents }: Props) {
   const anos = useMemo(() => getUniqueYears(eventsData), [eventsData])
 
   useEffect(() => {
-    let isMounted = true
+    const abortController = new AbortController()
 
     const loadFreshEvents = async () => {
       try {
-        const freshEvents = await fetchEvents()
-        if (isMounted) {
-          setEventsData(freshEvents)
-        }
+        const freshEvents = await fetchEvents({
+          signal: abortController.signal,
+          cache: 'no-store',
+        })
+        setEventsData(freshEvents)
       } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          return
+        }
         console.error(
           'Error fetching fresh events, using build-time fallback data:',
           error,
@@ -59,7 +63,7 @@ export default function EventList({ initialEvents }: Props) {
     loadFreshEvents()
 
     return () => {
-      isMounted = false
+      abortController.abort()
     }
   }, [])
 
