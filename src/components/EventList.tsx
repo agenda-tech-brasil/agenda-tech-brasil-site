@@ -49,7 +49,10 @@ export default function EventList({ initialEvents }: Props) {
           setEventsData(freshEvents)
         }
       } catch (error) {
-        console.error('Error fetching fresh events:', error)
+        console.error(
+          'Error fetching fresh events, using build-time fallback data:',
+          error,
+        )
       }
     }
 
