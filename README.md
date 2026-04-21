@@ -73,7 +73,7 @@
 
 ## 🔗 Créditos e Dados do Projeto
 
-Os dados dinâmicos exibidos no site são carregados de um arquivo `db.json` do projeto [Abacatinhos](https://github.com/abacatinhos/).
+Os dados dinâmicos exibidos no site são carregados de um arquivo `db.json` do projeto [AgendaTech]([https://github.com/abacatinhos/](https://github.com/agenda-tech-brasil/agenda-tech-brasil/blob/main/src/db/database.json)).
 
 ---
 
