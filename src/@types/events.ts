@@ -5,6 +5,7 @@ export interface Evento2 {
   cidade: string
   uf: string
   tipo: string
+  imagem?: string
 }
 
 export interface Meses {
@@ -38,6 +39,7 @@ export interface Tba {
   cidade: string
   uf: string
   tipo: string
+  imagem?: string
 }
 
 export interface Root {

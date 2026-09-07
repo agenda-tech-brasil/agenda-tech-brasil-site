@@ -1,5 +1,8 @@
+'use client'
+
 import { CalendarIcon, ExternalLinkIcon, MapPinIcon } from 'lucide-react'
-import { useMemo } from 'react'
+import Image from 'next/image'
+import { useMemo, useState } from 'react'
 
 import { CardContent, CardHeader } from '@/components/ui/card'
 import { formatEventDate, formatShortMonth, isEventPast } from '@/lib/dateUtils'
@@ -13,6 +16,7 @@ interface Event {
   cidade: string
   uf: string
   tipo: string
+  imagem?: string
 }
 
 interface EventCardProps {
@@ -22,6 +26,7 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, month, year }: EventCardProps) {
+  const [imgError, setImgError] = useState(false)
   const formattedDate = formatEventDate(event.data)
   const location = formatEventLocation(event.cidade, event.uf, event.tipo)
   const shortMonth = formatShortMonth(month)
@@ -44,6 +49,20 @@ export function EventCard({ event, month, year }: EventCardProps) {
         rel="noopener noreferrer"
         className="block overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
       >
+        {event.imagem && !imgError && (
+          <div className="relative aspect-video w-full overflow-hidden bg-muted">
+            <Image
+              src={event.imagem}
+              alt={`Banner do evento ${event.nome}`}
+              fill
+              unoptimized
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+              onError={() => setImgError(true)}
+            />
+          </div>
+        )}
+
         <CardHeader className="relative bg-primary px-4 py-3 text-primary-foreground">
           <div className="flex items-start justify-between">
             <h2 className="text-lg font-bold leading-snug lg:text-lg">
