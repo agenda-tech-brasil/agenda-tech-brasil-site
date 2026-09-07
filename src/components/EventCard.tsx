@@ -4,23 +4,14 @@ import { CalendarIcon, ExternalLinkIcon, MapPinIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useMemo, useState } from 'react'
 
+import { Evento2 } from '@/@types/events'
 import { CardContent, CardHeader } from '@/components/ui/card'
 import { formatEventDate, formatShortMonth, isEventPast } from '@/lib/dateUtils'
 import { formatEventLocation } from '@/lib/eventUtils'
 import { cn } from '@/lib/utils'
 
-interface Event {
-  nome: string
-  data: string[]
-  url: string
-  cidade: string
-  uf: string
-  tipo: string
-  imagem?: string
-}
-
 interface EventCardProps {
-  event: Event
+  event: Evento2
   month: string
   year: number
 }
