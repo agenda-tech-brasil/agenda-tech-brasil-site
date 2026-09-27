@@ -3,7 +3,7 @@ function LinksWithIcons() {
   return (
     <div className="mt-6 flex flex-wrap justify-end gap-4">
       <a
-        href="https://github.com/Abacatinhos/agenda-tech-brasil/blob/master/CONTRIBUTING.md"
+        href="https://github.com/agenda-tech-brasil/agenda-tech-brasil/blob/main/.github/CONTRIBUTING.md"
         target="_blank"
         className="flex items-center gap-2 text-primary underline"
       >
