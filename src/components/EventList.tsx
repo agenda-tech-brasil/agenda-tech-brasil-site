@@ -95,8 +95,10 @@ export default function EventList({ initialEvents }: Props) {
       // Encontrar o primeiro evento não realizado
       let firstUpcomingEventId: string | null = null
 
-      outerLoop: for (const yearData of filteredEvents) {
+      for (const yearData of filteredEvents) {
+        if (firstUpcomingEventId) break
         for (const mesData of yearData.meses) {
+          if (firstUpcomingEventId) break
           for (let idx = 0; idx < mesData.eventos.length; idx++) {
             const evento = mesData.eventos[idx]
             const eventIsPast = isEventPast(
@@ -107,7 +109,7 @@ export default function EventList({ initialEvents }: Props) {
 
             if (!eventIsPast) {
               firstUpcomingEventId = `event-${yearData.ano}-${mesData.mes}-${idx}`
-              break outerLoop
+              break
             }
           }
         }
