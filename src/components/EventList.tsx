@@ -23,6 +23,23 @@ interface Props {
   initialEvents: Evento[]
 }
 
+function findFirstUpcomingEventId(events: Evento[]): string | null {
+  for (const yearData of events) {
+    for (const mesData of yearData.meses) {
+      for (let idx = 0; idx < mesData.eventos.length; idx++) {
+        const evento = mesData.eventos[idx]
+        const eventIsPast = isEventPast(evento.data, mesData.mes, yearData.ano)
+
+        if (!eventIsPast) {
+          return `event-${yearData.ano}-${mesData.mes}-${idx}`
+        }
+      }
+    }
+  }
+
+  return null
+}
+
 export default function EventList({ initialEvents }: Props) {
   const [eventsData, setEventsData] = useState<Evento[]>(initialEvents)
   const [filteredEvents, setFilteredEvents] = useState<Evento[]>([])
@@ -93,25 +110,7 @@ export default function EventList({ initialEvents }: Props) {
   useEffect(() => {
     if (!loading && filteredEvents.length > 0) {
       // Encontrar o primeiro evento não realizado
-      let firstUpcomingEventId: string | null = null
-
-      outerLoop: for (const yearData of filteredEvents) {
-        for (const mesData of yearData.meses) {
-          for (let idx = 0; idx < mesData.eventos.length; idx++) {
-            const evento = mesData.eventos[idx]
-            const eventIsPast = isEventPast(
-              evento.data,
-              mesData.mes,
-              yearData.ano,
-            )
-
-            if (!eventIsPast) {
-              firstUpcomingEventId = `event-${yearData.ano}-${mesData.mes}-${idx}`
-              break outerLoop
-            }
-          }
-        }
-      }
+      const firstUpcomingEventId = findFirstUpcomingEventId(filteredEvents)
 
       // Se encontrou um evento futuro, faz scroll até ele
       if (firstUpcomingEventId) {
